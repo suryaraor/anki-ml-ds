@@ -53,7 +53,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const txt=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent.replace(/\s+/g,' ').trim();};
 // Storage keys are prefixed: localStorage is shared with every other repo on the same github.io origin.
 const KEY='mlds.known',TOUR='mlds.tourDone',DECK='mlds.deck',FONT='mlds.font';
-const SYNC={clientId:'',url:''};  // Google sign-in and sync stay hidden until these are set: see SETUP-SIGNIN.md
+const SYNC={clientId:'613993939930-t700rcuoqbjbd1k9bcc9aq6jiq6hjfsj.apps.googleusercontent.com',url:'https://script.google.com/macros/s/AKfycbyKTNZnaEA-S1RofjfPRhhA0_kFjeYhlGXjPoJfix5Fuj_-h98KJckQFHWLTF9KuXaegQ/exec'};  // Google sign-in and sync stay hidden until these are set: see SETUP-SIGNIN.md
 let known={};try{known=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(known));}catch(e){}};
 const ALL=DECKS.flatMap(d=>d.cards.map(c=>({...c,deck:d.name,plain:(txt(c.q)+' '+txt(c.a)+' '+txt(c.x)).toLowerCase()})));
