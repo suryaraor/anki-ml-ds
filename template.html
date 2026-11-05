@@ -26,6 +26,7 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 .again{border-color:#dc2626!important;color:#dc2626}.good{border-color:#16a34a!important;color:#16a34a}
 .hint{font-size:12px;color:var(--mut);margin-bottom:20px;text-align:center;padding:0 12px}.hint a{color:var(--mut)}
 #acct{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;min-height:34px}#syncState{color:var(--mut);font-size:12px}
+#notice{width:100%;background:#ccfbf1;color:var(--ink);padding:8px 16px;font-size:13px;text-align:center;line-height:1.7}#notice a{color:var(--acc)}#notice button{padding:2px 10px;font-size:13px;margin-left:4px}
 #help{width:34px;height:34px;padding:0;border-radius:50%;font-weight:bold}
 #zoom{position:fixed;inset:0;background:#0f172ae6;display:none;align-items:center;justify-content:center;z-index:40;cursor:zoom-out}#zoom.on{display:flex}#zoom img{max-width:95vw;max-height:92vh;background:#fff;border-radius:8px}
 #upd{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:none;gap:12px;align-items:center;font-size:14px;box-shadow:0 8px 30px #0005;z-index:45}
@@ -37,6 +38,7 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 #tip .row{display:flex;align-items:center;gap:8px}#tip .dots{margin-right:auto;color:var(--mut);font-size:13px}
 #tip button{font-size:14px;padding:6px 12px}#tip .pri{background:var(--acc);color:#fff;border-color:var(--acc)}#tip .skip{border:none;background:none;color:var(--mut)}
 </style></head><body>
+<div id="notice" role="status" style="display:none"></div>
 <header><h1>ML &amp; Data Science Flashcards</h1><select id="deck"></select>
 <select id="mode"><option value="all">All cards</option><option value="due">Not yet known</option></select>
 <input id="q" placeholder="Search…" size="12"><button id="shuf">Shuffle</button><button id="help" title="How to use this (tour)">?</button><div id="acct" style="display:none"></div></header>
@@ -46,14 +48,14 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 <div class="scene" id="scene"><div id="dots" role="img"></div><a id="more" target="_blank" rel="noopener" title="Search Google for this topic (opens a new tab)">🔍 Know more</a><div id="size"><button id="smaller" title="Smaller text (-)" aria-label="Smaller text">−</button><button id="bigger" title="Bigger text (+)" aria-label="Bigger text">+</button></div><div class="card" id="card"><div class="face front" id="front"></div><div class="face back" id="back"></div></div></div>
 <div class="controls"><button id="prev">← Prev</button><button id="say">🔊 Speak</button><button class="again" id="again">Again</button><button class="good" id="good">Know it</button><button id="next">Next →</button></div>
 <div class="hint">Space/click = flip · ←/→ = navigate · 1 = again · 2 = know it · S = speak · +/− = text size<br>
-Anki decks from <a href="https://github.com/ppant/anki" target="_blank" rel="noopener">ppant/anki</a> · <span id="net"></span><span id="privacy"></span></div>
+Anki decks from <a href="https://github.com/ppant/anki" target="_blank" rel="noopener">ppant/anki</a> · <span id="net"></span><span id="privacy"></span><span id="visitCtl"></span></div>
 <script>
 const DECKS=/*DATA*/null;const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const txt=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent.replace(/\s+/g,' ').trim();};
 // Storage keys are prefixed: localStorage is shared with every other repo on the same github.io origin.
 const KEY='mlds.known',TOUR='mlds.tourDone',DECK='mlds.deck',FONT='mlds.font';
-const SYNC={clientId:'613993939930-t700rcuoqbjbd1k9bcc9aq6jiq6hjfsj.apps.googleusercontent.com',url:'https://script.google.com/macros/s/AKfycbyKTNZnaEA-S1RofjfPRhhA0_kFjeYhlGXjPoJfix5Fuj_-h98KJckQFHWLTF9KuXaegQ/exec'};  // Google sign-in and sync stay hidden until these are set: see SETUP-SIGNIN.md
+const SYNC={clientId:'613993939930-t700rcuoqbjbd1k9bcc9aq6jiq6hjfsj.apps.googleusercontent.com',url:'https://script.google.com/macros/s/AKfycbzyZsB1sdEzIxWugaURVagSbwN8_Y9s9myVOL-ufi0H8WEzZxHyVX_B8Q6Jeb7aT4cuDA/exec'};  // Google sign-in and sync stay hidden until these are set: see SETUP-SIGNIN.md
 let known={};try{known=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(known));}catch(e){}};
 const ALL=DECKS.flatMap(d=>d.cards.map(c=>({...c,deck:d.name,plain:(txt(c.q)+' '+txt(c.a)+' '+txt(c.x)).toLowerCase()})));
@@ -190,9 +192,9 @@ function wipeLocalProgress(){known={};stamps={};dirty={};save();saveSyncState();
 async function onGoogleCredential(g){showAccount('Signing in…',true);
  try{const sub=JSON.parse(atob(g.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))).sub;
   // Another account used this browser and its session ended without a sign-out: keep their progress out of this one.
-  const prev=loadJson(USER,null);if(prev&&prev.sub!=sub)wipeLocalProgress();
+  const prev=loadJson(USER,null);if(prev&&prev.sub!=sub){wipeLocalProgress();localStorage.removeItem(VISITOR);}
   Object.keys(known).forEach(id=>{if(!stamps[id])stamps[id]=1;});  // from before sync: real, but older than any change on another device
-  const sent={...stamps},prefs=localPrefs(),res=await callBackend({action:'signIn',idToken:g.credential,changes:sent,prefs:prefs.at?prefs:undefined});
+  const sent={...stamps},prefs=localPrefs(),res=await callBackend({action:'signIn',idToken:g.credential,visitorId:visitorId(),knownCount:Object.keys(known).length,changes:sent,prefs:prefs.at?prefs:undefined});
   store(SESSION,res.session);store(USER,res.user);
   dirty={};Object.keys(stamps).forEach(id=>{if(stamps[id]!==sent[id])dirty[id]=stamps[id];});saveSyncState();  // marked while signing in
   localStorage.removeItem(PREFS_DIRTY);
@@ -201,7 +203,7 @@ async function onGoogleCredential(g){showAccount('Signing in…',true);
 async function signOut(){const btn=$('signOut');btn.disabled=true;syncStatus('Saving…');
  clearTimeout(syncTimer);while(syncBusy)await new Promise(r=>setTimeout(r,200));
  if(!await syncNow()){if(!session())return;btn.disabled=false;syncStatus('Couldn’t save your progress. Still signed in, so nothing is lost.');return;}
- localStorage.removeItem(SESSION);localStorage.removeItem(USER);wipeLocalProgress();
+ localStorage.removeItem(SESSION);localStorage.removeItem(USER);wipeLocalProgress();localStorage.removeItem(VISITOR);lastKnownSent=-1;  // a shared computer's next user isn't linked to this account
  if(window.google&&google.accounts)google.accounts.id.disableAutoSelect();
  build(true);showAccount();}
 let gsiStarted=false;
@@ -217,9 +219,41 @@ function showAccount(msg,busy){const a=$('acct'),u=loadJson(USER,null);
   a.innerHTML='<span title="'+esc(u.email||'')+'">'+esc(first)+'</span><span id="syncState"></span><button id="signOut">Sign out</button>';$('signOut').onclick=signOut;return;}
  a.innerHTML=(busy?'':'<span id="gbtn"></span>')+(msg?'<span id="syncState">'+esc(msg)+'</span>':'');
  if(!busy)loadGoogleButton();}
-if(SYNC.clientId&&SYNC.url){$('acct').style.display='';$('privacy').innerHTML=' · Signing in saves your name, email and progress in a private Google Sheet kept by the site owner. <a href="privacy.html">Privacy</a>';
+// Visit counting: a random ID in this browser and a row in the Visitors tab, with a notice and an opt-out.
+// A failure here is ignored, because it must never affect studying or signing in.
+const VISITOR='mlds.visitor',NOTRACK='mlds.noTrack',NOTICE='mlds.noticeSeen',FORGET='mlds.forgetVisitor';
+const browserOptOut=()=>navigator.globalPrivacyControl===true;
+const trackingOff=()=>localStorage.getItem(NOTRACK)=='1'||browserOptOut();
+let lastKnownSent=-1;
+const newVisitorId=()=>{if(crypto.randomUUID)return crypto.randomUUID();const b=crypto.getRandomValues(new Uint8Array(16));b[6]=b[6]&15|64;b[8]=b[8]&63|128;
+ const h=[...b].map(x=>x.toString(16).padStart(2,'0')).join('');return [h.slice(0,8),h.slice(8,12),h.slice(12,16),h.slice(16,20),h.slice(20)].join('-');};
+function visitorId(){if(trackingOff())return '';let id=localStorage.getItem(VISITOR);if(!id){id=newVisitorId();store(VISITOR,id);}return id;}
+function sendVisit(keepalive){const id=visitorId();if(!id||!navigator.onLine)return;const count=Object.keys(known).length;lastKnownSent=count;
+ callBackend({action:'visit',visitorId:id,knownCount:count,session:session()||undefined},keepalive).catch(()=>{});}
+// Removes this browser's row. Remembered until it succeeds, so going offline can't lose an opt-out.
+function flushForget(){const id=localStorage.getItem(FORGET);if(!id||!navigator.onLine)return;
+ callBackend({action:'forgetVisitor',visitorId:id}).then(()=>{if(localStorage.getItem(FORGET)==id)localStorage.removeItem(FORGET);}).catch(()=>{});}
+function dropVisitorId(){const id=localStorage.getItem(VISITOR);if(id){store(FORGET,id);localStorage.removeItem(VISITOR);}flushForget();}
+function setTracking(on){if(on){localStorage.removeItem(NOTRACK);sendVisit();}else{store(NOTRACK,'1');dropVisitorId();}
+ hideNotice();showVisitControl();}
+function hideNotice(){store(NOTICE,'1');$('notice').style.display='none';}
+function showVisitControl(){const v=$('visitCtl');
+ if(browserOptOut()){v.textContent=' · Visit counting is off (your browser’s privacy setting)';return;}
+ const on=!trackingOff();v.innerHTML=' · Visit counting is '+(on?'on':'off')+': <a href="#" id="visitToggle">turn '+(on?'off':'on')+'</a>';
+ $('visitToggle').onclick=e=>{e.preventDefault();setTracking(!on);};}
+function startVisits(){showVisitControl();
+ if(trackingOff()){dropVisitorId();}
+ else{sendVisit();
+  if(!localStorage.getItem(NOTICE)){const n=$('notice');n.style.display='';
+   n.innerHTML='This site counts visits with a random ID saved in your browser. If you sign in, it’s linked to your account. <a href="privacy.html">Privacy</a> <button id="noticeOk">OK</button> <button id="noticeOff">Turn off</button>';
+   $('noticeOk').onclick=hideNotice;$('noticeOff').onclick=()=>setTracking(false);}}
+ flushForget();
+ addEventListener('online',()=>{flushForget();if(lastKnownSent<0)sendVisit();});
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden'&&!trackingOff()&&Object.keys(known).length!=lastKnownSent)sendVisit(true);});}
+if(SYNC.clientId&&SYNC.url){$('acct').style.display='';$('privacy').innerHTML='Signing in saves your name, email and progress in a private Google Sheet kept by the site owner. <a href="privacy.html">Privacy</a>';
  showAccount();
  if(session())syncNow({pull:true,firstLoad:true});
+ startVisits();
  addEventListener('online',()=>{if(!session())loadGoogleButton();else syncNow({pull:true});});
  document.addEventListener('visibilitychange',()=>{if(!session())return;
   if(document.visibilityState=='hidden')syncNow({keepalive:true});
@@ -230,7 +264,7 @@ if(!localStorage.getItem(TOUR))setTimeout(tourStart,400);
 
 // Offline cache: sw.js keeps the page and images; a new build is fetched in the background
 // and the "Refresh" banner switches to it (old cache is then removed).
-const net=()=>{$('net').textContent=navigator.onLine?'':'offline';};addEventListener('online',net);addEventListener('offline',net);net();
+const net=()=>{$('net').textContent=navigator.onLine?'':'offline · ';};addEventListener('online',net);addEventListener('offline',net);net();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
  let reload=false;  // only after "Refresh"; the first install also changes the controller
  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reload){reload=false;location.reload();}});

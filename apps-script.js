@@ -1,4 +1,4 @@
-// Google Apps Script backend for the flashcards: Google sign-in, user preferences and synced progress.
+// Google Apps Script backend for the flashcards: Google sign-in, user preferences, synced progress and visit counts.
 // Setup steps are in SETUP-SIGNIN.md. After changing this file, paste it into the Apps Script editor and
 // use Deploy > Manage deployments > Edit > New version, so the /exec URL stays the same.
 //
@@ -13,16 +13,22 @@ const PROGRESS_SHEET = 'Progress';
 const USERS_HEADERS = ['Google ID', 'Email', 'Name', 'First Sign-in', 'Last Sign-in', 'Sign-ins', 'Last Seen'];
 const PREFS_HEADERS = ['Google ID', 'Text Size', 'Last Deck', 'Updated (epoch s)'];
 const PROGRESS_HEADERS = ['Google ID', 'Known Cards', 'Card Data', 'Updated'];
+const VISITORS_SHEET = 'Visitors';
+const VISITORS_HEADERS = ['Visitor ID', 'First Seen', 'Last Seen', 'Visits', 'Known Cards', 'Google ID'];
 
 const SESSION_DAYS = 30;
 const RENEW_DAYS = 15;           // a session with less than this left is replaced on the next call
 const MAX_CHANGES = 5000;        // cards accepted in one request
 const MAX_CELL_CHARS = 49000;    // a Sheets cell holds at most 50,000 characters
+const VISIT_GAP_MINUTES = 30;    // activity after a gap this long counts as a new visit
+// Visit counting needs no sign-in, so anyone could call it. These limits stop that filling the sheet.
+const MAX_VISITORS = 20000;
+const MAX_NEW_VISITORS_PER_HOUR = 500;
 
 // Run once from the Apps Script editor: creates the tabs and the session secret.
 function setup() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  [[USERS_SHEET, USERS_HEADERS], [PREFS_SHEET, PREFS_HEADERS], [PROGRESS_SHEET, PROGRESS_HEADERS]].forEach(([name, headers]) => {
+  [[USERS_SHEET, USERS_HEADERS], [PREFS_SHEET, PREFS_HEADERS], [PROGRESS_SHEET, PROGRESS_HEADERS], [VISITORS_SHEET, VISITORS_HEADERS]].forEach(([name, headers]) => {
     const sheet = ss.getSheetByName(name) || ss.insertSheet(name);
     if (sheet.getLastRow() === 0) sheet.appendRow(headers);
     sheet.setFrozenRows(1);
@@ -50,6 +56,8 @@ function doPost(e) {
     switch (body.action) {
       case 'signIn': return json(signIn(body));
       case 'sync': return json(sync(body));
+      case 'visit': return json(visit(body));
+      case 'forgetVisitor': return json(forgetVisitor(body));
       default: return json({ success: false, error: 'Unknown action' });
     }
   } catch (err) {
@@ -95,6 +103,7 @@ function signIn(body) {
   const key = userKey(google.sub);
   const data = withLock(() => {
     recordSignIn(key, email, google.name || '');
+    linkVisitor(body.visitorId, key, body.knownCount);
     return applySync(key, body, true);
   });
   return Object.assign({ success: true, session: createSession(google.sub), user: { sub: google.sub, email: email, name: google.name || '' } }, data);
@@ -256,6 +265,103 @@ function saveProgress(key, changes) {
   if (row) sheet.getRange(row, 2, 1, 3).setValues([values]);
   else sheet.appendRow([key].concat(values));
   return stored;
+}
+
+// ---- Visitors ----
+// One row per browser, identified by a random ID that the browser creates. No IP address or other
+// browser details are stored. A sign-in fills in Google ID, which links the earlier visits to that user.
+
+function validVisitorId(id) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(String(id || ''));
+}
+
+function cleanKnownCount(n) {
+  return Math.min(Math.max(0, Math.floor(Number(n)) || 0), 100000);
+}
+
+// Created on demand, so that existing installs only need a new deployment version.
+function visitorsSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(VISITORS_SHEET);
+  if (!sheet) {
+    sheet = ss.insertSheet(VISITORS_SHEET);
+    sheet.appendRow(VISITORS_HEADERS);
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function roomForNewVisitor(sheet) {
+  if (sheet.getLastRow() - 1 >= MAX_VISITORS) return false;
+  const cache = CacheService.getScriptCache();
+  const bucket = 'newVisitors:' + Math.floor(Date.now() / 3600000);
+  const count = Number(cache.get(bucket)) || 0;
+  if (count >= MAX_NEW_VISITORS_PER_HOUR) return false;
+  cache.put(bucket, String(count + 1), 3700);
+  return true;
+}
+
+// Visits must never hold up saving someone's progress, so they give up quickly if the sheet is busy.
+function withVisitLock(fn) {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(3000)) return { success: false, code: 'busy' };
+  try {
+    const result = fn();
+    SpreadsheetApp.flush();
+    return result;
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function visit(body) {
+  if (!validVisitorId(body.visitorId)) fail('Invalid visitor ID', 'invalid');
+  // Links browsers that were already signed in before visit counting existed.
+  let key = '';
+  if (body.session) {
+    try { key = userKey(verifySession(body.session).sub); } catch (err) { key = ''; }
+  }
+  return withVisitLock(() => {
+    const sheet = visitorsSheet();
+    const known = cleanKnownCount(body.knownCount);
+    const now = new Date();
+    const row = findRow(sheet, body.visitorId);
+    if (!row) {
+      if (!roomForNewVisitor(sheet)) return { success: false, code: 'limit' };
+      sheet.appendRow([body.visitorId, now, now, 1, known, key]);
+      return { success: true };
+    }
+    const r = sheet.getRange(row, 3, 1, 4).getValues()[0];
+    const gap = now.getTime() - new Date(r[0]).getTime();
+    const visits = (Number(r[1]) || 0) + (gap >= VISIT_GAP_MINUTES * 60000 ? 1 : 0);
+    sheet.getRange(row, 3, 1, 4).setValues([[now, visits, known, r[3] || key]]);
+    return { success: true };
+  });
+}
+
+// Runs inside the sign-in's lock. A visit problem must never block signing in, and an existing link is
+// kept, so that a browser can't be moved to a different account.
+function linkVisitor(visitorId, key, knownCount) {
+  if (!validVisitorId(visitorId)) return;
+  const sheet = visitorsSheet();
+  const row = findRow(sheet, visitorId);
+  if (row) {
+    if (!sheet.getRange(row, 6).getValue()) sheet.getRange(row, 6).setValue(key);
+  } else if (roomForNewVisitor(sheet)) {
+    const now = new Date();
+    sheet.appendRow([visitorId, now, now, 1, cleanKnownCount(knownCount), key]);
+  }
+}
+
+// Opting out removes the row. Knowing the random ID is what proves the request is from that browser.
+function forgetVisitor(body) {
+  if (!validVisitorId(body.visitorId)) fail('Invalid visitor ID', 'invalid');
+  return withVisitLock(() => {
+    const sheet = visitorsSheet();
+    const row = findRow(sheet, body.visitorId);
+    if (row) sheet.deleteRow(row);
+    return { success: true };
+  });
 }
 
 // ---- Preferences ----

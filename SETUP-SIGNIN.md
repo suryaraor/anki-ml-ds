@@ -58,6 +58,7 @@ Then run `python build.py`, commit and push. Both values are safe to have in a p
 | `Users` | Google ID, email, name, first and last sign-in, sign-in count, last seen |
 | `Preferences` | Google ID, text size, last deck, update time |
 | `Progress` | Google ID, known card count, card data, update time |
+| `Visitors` | Random visitor ID, first and last seen, visits, known card count, Google ID once signed in |
 
 ## Good to know
 
@@ -65,6 +66,7 @@ Then run `python build.py`, commit and push. Both values are safe to have in a p
 - **Signing out:** the page saves first, then clears that user's progress from the browser, so the next person on the device doesn't see it. If saving fails, it stays signed in and says so.
 - **Sessions:** a sign-in lasts 30 days and renews as the site is used.
 - **Removing access:** taking someone off `ALLOWED_EMAILS` applies at their next sign-in. To sign everyone out now, change `SESSION_SECRET` in Script properties to a new random value.
-- **Deleting a user:** remove their row from all three tabs. Sign them out as above too, or the browser may send their progress again.
+- **Deleting a user:** remove their row from `Users`, `Preferences` and `Progress`, and every `Visitors` row with their Google ID. Sign them out as above too, or the browser may send their progress again.
 - **Privacy:** the sheet holds email addresses, so don't share it publicly. `flashcards/privacy.html` tells users what signing in stores and how to ask for deletion, so update it if that changes.
+- **Visit counts are rough:** each browser counts once, activity after a 30-minute gap is a new visit, and anyone could send fake visits because this part needs no sign-in. New rows stop at 500 an hour and 20,000 in total, so old rows may need clearing eventually.
 - **Limits:** this suits personal use or a small group, since writes happen one at a time. Each user's card data must fit in one cell (about 50,000 characters), which comfortably covers the current 1,070 cards.
