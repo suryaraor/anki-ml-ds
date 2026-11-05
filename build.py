@@ -208,6 +208,34 @@ def read_curated(folder):
                    "x": html.escape(" :: ".join(parts[2:]), quote=False), "src": level}
 
 
+def rate_cards(decks):
+    """Set c["c"], complexity 1-5, from data/complexity.json. Typos and unrated cards stop the build."""
+    cfg = json.load(open(os.path.join(DATA, "complexity.json"), encoding="utf8"))
+    overrides = {}
+    for rating, fronts in cfg["curated_overrides"].items():
+        for front in fronts:
+            if norm(front) in overrides:
+                raise SystemExit("complexity.json: rated twice: " + front)
+            overrides[norm(front)] = int(rating)
+    unused, missing = set(overrides) | set(cfg["anki"]), []
+    for d in decks:
+        for c in d["cards"]:
+            if d["name"] == CURATED[0]:
+                key = norm(c["q"])
+                level = re.match(r"Level (\d+)", c["src"]).group(1)
+                c["c"] = overrides.get(key, cfg["level_defaults"][level])
+            else:
+                key = c["id"]
+                if key in cfg["anki"]:
+                    c["c"] = cfg["anki"][key]
+                else:
+                    missing.append(text(c["q"])[:60])
+            unused.discard(key)
+    if unused or missing:
+        raise SystemExit("complexity.json: not matching any card: %s; cards without a rating: %s"
+                         % (sorted(unused), missing))
+
+
 def main():
     shutil.rmtree(MEDIA, ignore_errors=True)
     os.makedirs(MEDIA)
@@ -242,6 +270,7 @@ def main():
         ids.add(c["id"])
         curated.append(c)
     out.insert(0, {"name": CURATED[0], "cards": curated})
+    rate_cards(out)
 
     # Only ship images that a card actually shows.
     fields = " ".join(c[k] for d in out for c in d["cards"] for k in ("q", "a", "x"))
