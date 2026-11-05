@@ -224,11 +224,12 @@ function showAccount(msg,busy){const a=$('acct'),u=loadJson(USER,null);
 const VISITOR='mlds.visitor',NOTRACK='mlds.noTrack',NOTICE='mlds.noticeSeen',FORGET='mlds.forgetVisitor';
 const browserOptOut=()=>navigator.globalPrivacyControl===true;
 const trackingOff=()=>localStorage.getItem(NOTRACK)=='1'||browserOptOut();
-let lastKnownSent=-1;
+let lastKnownSent=-1,lastVisitAt=0;
+const VISIT_EVERY=300000;  // while someone is active, Last Seen is kept current to within 5 minutes
 const newVisitorId=()=>{if(crypto.randomUUID)return crypto.randomUUID();const b=crypto.getRandomValues(new Uint8Array(16));b[6]=b[6]&15|64;b[8]=b[8]&63|128;
  const h=[...b].map(x=>x.toString(16).padStart(2,'0')).join('');return [h.slice(0,8),h.slice(8,12),h.slice(12,16),h.slice(16,20),h.slice(20)].join('-');};
 function visitorId(){if(trackingOff())return '';let id=localStorage.getItem(VISITOR);if(!id){id=newVisitorId();store(VISITOR,id);}return id;}
-function sendVisit(keepalive){const id=visitorId();if(!id||!navigator.onLine)return;const count=Object.keys(known).length;lastKnownSent=count;
+function sendVisit(keepalive){const id=visitorId();if(!id||!navigator.onLine)return;const count=Object.keys(known).length;lastKnownSent=count;lastVisitAt=Date.now();
  callBackend({action:'visit',visitorId:id,knownCount:count,session:session()||undefined},keepalive).catch(()=>{});}
 // Removes this browser's row. Remembered until it succeeds, so going offline can't lose an opt-out.
 function flushForget(){const id=localStorage.getItem(FORGET);if(!id||!navigator.onLine)return;
@@ -249,7 +250,10 @@ function startVisits(){showVisitControl();
    $('noticeOk').onclick=hideNotice;$('noticeOff').onclick=()=>setTracking(false);}}
  flushForget();
  addEventListener('online',()=>{flushForget();if(lastKnownSent<0)sendVisit();});
- document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden'&&!trackingOff()&&Object.keys(known).length!=lastKnownSent)sendVisit(true);});}
+ const stillHere=()=>{if(!trackingOff()&&Date.now()-lastVisitAt>VISIT_EVERY)sendVisit();};
+ addEventListener('pointerdown',stillHere,{passive:true});addEventListener('keydown',stillHere,{passive:true});
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='visible')stillHere();
+  else if(!trackingOff()&&Object.keys(known).length!=lastKnownSent)sendVisit(true);});}
 if(SYNC.clientId&&SYNC.url){$('acct').style.display='';$('privacy').innerHTML='Signing in saves your name, email and progress in a private Google Sheet kept by the site owner. <a href="privacy.html">Privacy</a>';
  showAccount();
  if(session())syncNow({pull:true,firstLoad:true});
