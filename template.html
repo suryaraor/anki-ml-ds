@@ -6,6 +6,7 @@ header{width:100%;max-width:820px;padding:16px;display:flex;flex-wrap:wrap;gap:8
 h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:14px;padding:6px 10px;border:1px solid #cbd5d4;border-radius:8px;background:#fff;color:inherit;cursor:pointer}
 .bar{width:100%;max-width:820px;padding:0 16px;color:var(--mut);font-size:14px;display:flex;justify-content:space-between}
 .scene{perspective:1400px;width:calc(100% - 32px);max-width:788px;height:min(520px,calc(100vh - 230px));min-height:340px;margin:12px 16px;cursor:pointer;position:relative}
+#more{position:absolute;bottom:12px;right:22px;z-index:5;display:flex;gap:5px;align-items:center;padding:6px 12px;border:1px solid #cbd5d4;border-radius:99px;background:#fffd;color:var(--acc);font-size:13px;text-decoration:none;cursor:pointer}#more:hover{background:#ccfbf1}
 #dots{position:absolute;top:18px;left:22px;z-index:5;display:flex;gap:5px;padding:4px 6px;border-radius:99px;background:#fffd;pointer-events:none}#dots i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--acc)}#dots i.on{background:var(--acc)}
 #size{position:absolute;top:10px;right:22px;z-index:5;display:flex;gap:6px;cursor:default}#size button{width:34px;height:34px;padding:0;border-radius:50%;font-size:20px;line-height:1;background:#fffd}#size button:disabled{opacity:.4;cursor:default}
 .card{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d}.card.flip{transform:rotateY(180deg)}
@@ -41,7 +42,7 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 <div id="tour"><div id="spot"></div><div id="tip" role="dialog" aria-live="polite"></div></div>
 <div id="zoom"></div><div id="upd" role="status"><span>New cards are available.</span><button id="updBtn">Refresh</button></div>
 <div class="bar"><span id="pos"></span><span id="stats"></span></div>
-<div class="scene" id="scene"><div id="dots" role="img"></div><div id="size"><button id="smaller" title="Smaller text (-)" aria-label="Smaller text">−</button><button id="bigger" title="Bigger text (+)" aria-label="Bigger text">+</button></div><div class="card" id="card"><div class="face front" id="front"></div><div class="face back" id="back"></div></div></div>
+<div class="scene" id="scene"><div id="dots" role="img"></div><a id="more" target="_blank" rel="noopener" title="Search Google for this topic (opens a new tab)">🔍 Know more</a><div id="size"><button id="smaller" title="Smaller text (-)" aria-label="Smaller text">−</button><button id="bigger" title="Bigger text (+)" aria-label="Bigger text">+</button></div><div class="card" id="card"><div class="face front" id="front"></div><div class="face back" id="back"></div></div></div>
 <div class="controls"><button id="prev">← Prev</button><button id="say">🔊 Speak</button><button class="again" id="again">Again</button><button class="good" id="good">Know it</button><button id="next">Next →</button></div>
 <div class="hint">Space/click = flip · ←/→ = navigate · 1 = again · 2 = know it · S = speak · +/− = text size<br>
 Anki decks from <a href="https://github.com/ppant/anki" target="_blank" rel="noopener">ppant/anki</a> · <span id="net"></span></div>
@@ -62,9 +63,24 @@ const pool=()=>$('deck').value=='all'?ALL:ALL.filter(c=>c.deck==$('deck').value)
 function build(keep){const q=$('q').value.toLowerCase().trim();
  list=pool().filter(c=>(!q||c.plain.includes(q))&&($('mode').value=='all'||!known[c.id]));
  if(!keep)i=0;i=Math.min(i,Math.max(0,list.length-1));render();}
+// Know more search: topic, then "machine learning" or "AI" when the card needs that context, then its description.
+// Capped at 30 words because Google ignores words past about 32; the description is what gets cut.
+function searchContext(c,text){
+ if(/\b(AI|ML|LLMs?)\b|\b[Mm]achine [Ll]earning|\b[Dd]eep [Ll]earning/.test(text))return '';
+ const level=+(c.src.match(/^Level (\d+)/)||[])[1];
+ if(level==9||level==10)return 'AI';
+ if(level>=4&&level<=7||c.deck=='Machine Learning'||c.deck=='Deep Learning')return 'machine learning';
+ return level&&/\b(models?|training|trained|predict\w*|neural|learn\w*)\b/i.test(text)?'machine learning':'';}
+function searchQuery(c){
+ const q=txt(c.q),topic=q.length>120?q.slice(0,120).replace(/\s+\S*$/,''):q,desc=txt(c.a);
+ if(!topic)return '';
+ const head=[topic,searchContext(c,topic+' '+desc)].filter(Boolean).join(' ');
+ const room=Math.max(0,30-head.split(/\s+/).length);
+ return (head+' '+desc.split(/\s+/).slice(0,room).join(' ')).replace(/[\s,;:.]+$/,'');}
 function render(){flipped=false;$('card').classList.remove('flip');const c=list[i],p=pool();
  $('stats').textContent='Known: '+p.filter(x=>known[x.id]).length+'/'+p.length;
  $('dots').style.display=c?'':'none';if(c){$('dots').innerHTML='<i></i>'.repeat(5).replace(/<i>/g,(m,o)=>o/7<c.c?'<i class="on">':m);$('dots').title=$('dots').ariaLabel='Complexity: '+c.c+' of 5';}
+ const query=c?searchQuery(c):'';$('more').style.display=query?'':'none';$('more').href='https://www.google.com/search?q='+encodeURIComponent(query);
  if(!c){$('front').innerHTML='<div class="in"><div class="q">🎉 No cards here.</div></div>';$('back').innerHTML='';$('pos').textContent='';return;}
  $('pos').textContent='Card '+(i+1)+' of '+list.length;
  const chips='<div class="chips">'+($('deck').value=='all'?'<span class="chip">'+esc(c.deck)+'</span>':'')+(c.src?'<span class="chip">'+esc(c.src)+'</span>':'')+'</div>';
@@ -83,7 +99,7 @@ $('scene').onclick=e=>{if(e.target.tagName=='IMG'&&(flipped?e.target.closest('.b
 let fontPct=+localStorage.getItem(FONT)||100;
 const setFont=p=>{fontPct=Math.min(200,Math.max(80,p));document.documentElement.style.setProperty('--fs',fontPct/100);
  $('smaller').disabled=fontPct<=80;$('bigger').disabled=fontPct>=200;try{localStorage.setItem(FONT,fontPct);}catch(e){}};
-setFont(fontPct);$('size').onclick=e=>e.stopPropagation();$('smaller').onclick=()=>setFont(fontPct-10);$('bigger').onclick=()=>setFont(fontPct+10);
+setFont(fontPct);$('size').onclick=$('more').onclick=e=>e.stopPropagation();$('smaller').onclick=()=>setFont(fontPct-10);$('bigger').onclick=()=>setFont(fontPct+10);
 $('zoom').onclick=()=>$('zoom').classList.remove('on');
 $('prev').onclick=()=>go(-1);$('next').onclick=()=>go(1);
 $('again').onclick=()=>mark(0);$('good').onclick=()=>mark(1);$('say').onclick=say;
@@ -93,7 +109,7 @@ const STEPS=[
  {t:'Welcome 👋',p:`Flashcards for machine learning, deep learning, data mining, algorithms and Python: <b>${ALL.length}</b> cards in ${DECKS.length} decks. This quick tour shows how it works.`},
  {el:'deck',t:'1. Pick a deck',p:'Study one topic, or choose <b>All decks</b> to mix them. Your choice is remembered.'},
  {el:'scene',t:'2. Think, then flip',p:'The dots in the top-left corner show how complex a card is, from 1 to 5. Read the question and answer it in your head. Then <b>click the card</b> or press <kbd>Space</kbd> to flip it.'},
- {el:'scene',flip:1,t:'3. Check the answer',p:'The back shows the answer, and sometimes an explanation or a diagram. Click a diagram to enlarge it.'},
+ {el:'scene',flip:1,t:'3. Check the answer',p:'The back shows the answer, and sometimes an explanation or a diagram. Click a diagram to enlarge it, or click <b>Know more</b> to search Google for the topic in a new tab.'},
  {el:'rate',t:'4. Be honest with yourself',p:'Press <b>Know it</b> (<kbd>2</kbd>) if you got it right, or <b>Again</b> (<kbd>1</kbd>) if you didn’t. Use <b>← Prev</b> / <b>Next →</b> to browse without rating.'},
  {el:'stats',t:'5. Track your progress',p:'This counts the cards you know. Progress is saved in this browser.'},
  {el:'mode',t:'6. Focus on what’s left',p:'Switch to <b>Not yet known</b> to study only the cards you haven’t marked as known.'},
