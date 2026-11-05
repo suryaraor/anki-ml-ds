@@ -66,5 +66,5 @@ Then run `python build.py`, commit and push. Both values are safe to have in a p
 - **Sessions:** a sign-in lasts 30 days and renews as the site is used.
 - **Removing access:** taking someone off `ALLOWED_EMAILS` applies at their next sign-in. To sign everyone out now, change `SESSION_SECRET` in Script properties to a new random value.
 - **Deleting a user:** remove their row from all three tabs. Sign them out as above too, or the browser may send their progress again.
-- **Privacy:** the sheet holds email addresses, so don't share it publicly. The site's footer tells users what signing in stores.
+- **Privacy:** the sheet holds email addresses, so don't share it publicly. `flashcards/privacy.html` tells users what signing in stores and how to ask for deletion, so update it if that changes.
 - **Limits:** this suits personal use or a small group, since writes happen one at a time. Each user's card data must fit in one cell (about 50,000 characters), which comfortably covers the current 1,070 cards.

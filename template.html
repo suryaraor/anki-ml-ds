@@ -217,7 +217,7 @@ function showAccount(msg,busy){const a=$('acct'),u=loadJson(USER,null);
   a.innerHTML='<span title="'+esc(u.email||'')+'">'+esc(first)+'</span><span id="syncState"></span><button id="signOut">Sign out</button>';$('signOut').onclick=signOut;return;}
  a.innerHTML=(busy?'':'<span id="gbtn"></span>')+(msg?'<span id="syncState">'+esc(msg)+'</span>':'');
  if(!busy)loadGoogleButton();}
-if(SYNC.clientId&&SYNC.url){$('acct').style.display='';$('privacy').textContent=' · Signing in saves your name, email and progress in a private Google Sheet kept by the site owner.';
+if(SYNC.clientId&&SYNC.url){$('acct').style.display='';$('privacy').innerHTML=' · Signing in saves your name, email and progress in a private Google Sheet kept by the site owner. <a href="privacy.html">Privacy</a>';
  showAccount();
  if(session())syncNow({pull:true,firstLoad:true});
  addEventListener('online',()=>{if(!session())loadGoogleButton();else syncNow({pull:true});});

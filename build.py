@@ -288,10 +288,11 @@ def main():
     # visitors get the new cards; unchanged builds keep the same version (no re-download).
     sw = open(os.path.join(ROOT, "sw-template.js"), encoding="utf8").read()
     h = hashlib.sha256(page.encode() + sw.encode())
+    h.update(open(os.path.join(OUT, "privacy.html"), "rb").read())
     for name in media:
         h.update(name.encode() + b"\0" + open(os.path.join(MEDIA, name), "rb").read())
     version = h.hexdigest()[:12]
-    files = ["index.html"] + ["media/" + n for n in media]
+    files = ["index.html", "privacy.html"] + ["media/" + n for n in media]
     sw = sw.replace("__VERSION__", version).replace("/*FILES*/[]", json.dumps(files, ensure_ascii=False))
     with open(os.path.join(OUT, "sw.js"), "w", encoding="utf8", newline="\n") as fh:
         fh.write(sw)
