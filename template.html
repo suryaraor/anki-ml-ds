@@ -25,6 +25,7 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 .controls{display:flex;gap:10px;margin:6px 0 16px;flex-wrap:wrap;justify-content:center}.controls button{padding:10px 18px;font-size:15px}
 .again{border-color:#dc2626!important;color:#dc2626}.good{border-color:#16a34a!important;color:#16a34a}
 .hint{font-size:12px;color:var(--mut);margin-bottom:20px;text-align:center;padding:0 12px}.hint a{color:var(--mut)}
+#acct{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;min-height:34px}#syncState{color:var(--mut);font-size:12px}
 #help{width:34px;height:34px;padding:0;border-radius:50%;font-weight:bold}
 #zoom{position:fixed;inset:0;background:#0f172ae6;display:none;align-items:center;justify-content:center;z-index:40;cursor:zoom-out}#zoom.on{display:flex}#zoom img{max-width:95vw;max-height:92vh;background:#fff;border-radius:8px}
 #upd{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:none;gap:12px;align-items:center;font-size:14px;box-shadow:0 8px 30px #0005;z-index:45}
@@ -38,20 +39,21 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 </style></head><body>
 <header><h1>ML &amp; Data Science Flashcards</h1><select id="deck"></select>
 <select id="mode"><option value="all">All cards</option><option value="due">Not yet known</option></select>
-<input id="q" placeholder="Search…" size="12"><button id="shuf">Shuffle</button><button id="help" title="How to use this (tour)">?</button></header>
+<input id="q" placeholder="Search…" size="12"><button id="shuf">Shuffle</button><button id="help" title="How to use this (tour)">?</button><div id="acct" style="display:none"></div></header>
 <div id="tour"><div id="spot"></div><div id="tip" role="dialog" aria-live="polite"></div></div>
 <div id="zoom"></div><div id="upd" role="status"><span>New cards are available.</span><button id="updBtn">Refresh</button></div>
 <div class="bar"><span id="pos"></span><span id="stats"></span></div>
 <div class="scene" id="scene"><div id="dots" role="img"></div><a id="more" target="_blank" rel="noopener" title="Search Google for this topic (opens a new tab)">🔍 Know more</a><div id="size"><button id="smaller" title="Smaller text (-)" aria-label="Smaller text">−</button><button id="bigger" title="Bigger text (+)" aria-label="Bigger text">+</button></div><div class="card" id="card"><div class="face front" id="front"></div><div class="face back" id="back"></div></div></div>
 <div class="controls"><button id="prev">← Prev</button><button id="say">🔊 Speak</button><button class="again" id="again">Again</button><button class="good" id="good">Know it</button><button id="next">Next →</button></div>
 <div class="hint">Space/click = flip · ←/→ = navigate · 1 = again · 2 = know it · S = speak · +/− = text size<br>
-Anki decks from <a href="https://github.com/ppant/anki" target="_blank" rel="noopener">ppant/anki</a> · <span id="net"></span></div>
+Anki decks from <a href="https://github.com/ppant/anki" target="_blank" rel="noopener">ppant/anki</a> · <span id="net"></span><span id="privacy"></span></div>
 <script>
 const DECKS=/*DATA*/null;const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const txt=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent.replace(/\s+/g,' ').trim();};
 // Storage keys are prefixed: localStorage is shared with every other repo on the same github.io origin.
 const KEY='mlds.known',TOUR='mlds.tourDone',DECK='mlds.deck',FONT='mlds.font';
+const SYNC={clientId:'',url:''};  // Google sign-in and sync stay hidden until these are set: see SETUP-SIGNIN.md
 let known={};try{known=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(known));}catch(e){}};
 const ALL=DECKS.flatMap(d=>d.cards.map(c=>({...c,deck:d.name,plain:(txt(c.q)+' '+txt(c.a)+' '+txt(c.x)).toLowerCase()})));
@@ -77,8 +79,9 @@ function searchQuery(c){
  const head=[topic,searchContext(c,topic+' '+desc)].filter(Boolean).join(' ');
  const room=Math.max(0,30-head.split(/\s+/).length);
  return (head+' '+desc.split(/\s+/).slice(0,room).join(' ')).replace(/[\s,;:.]+$/,'');}
-function render(){flipped=false;$('card').classList.remove('flip');const c=list[i],p=pool();
- $('stats').textContent='Known: '+p.filter(x=>known[x.id]).length+'/'+p.length;
+function showStats(){const p=pool();$('stats').textContent='Known: '+p.filter(x=>known[x.id]).length+'/'+p.length;}
+function render(){flipped=false;$('card').classList.remove('flip');const c=list[i];
+ showStats();
  $('dots').style.display=c?'':'none';if(c){$('dots').innerHTML='<i></i>'.repeat(5).replace(/<i>/g,(m,o)=>o/7<c.c?'<i class="on">':m);$('dots').title=$('dots').ariaLabel='Complexity: '+c.c+' of 5';}
  const query=c?searchQuery(c):'';$('more').style.display=query?'':'none';$('more').href='https://www.google.com/search?q='+encodeURIComponent(query);
  if(!c){$('front').innerHTML='<div class="in"><div class="q">🎉 No cards here.</div></div>';$('back').innerHTML='';$('pos').textContent='';return;}
@@ -89,7 +92,7 @@ function render(){flipped=false;$('card').classList.remove('flip');const c=list[
  $('front').scrollTop=$('back').scrollTop=0;}
 const flip=()=>{flipped=!flipped;$('card').classList.toggle('flip',flipped)};
 const go=n=>{if(list.length){i=(i+n+list.length)%list.length;render();}};
-const mark=v=>{const c=list[i];if(!c)return;if(v)known[c.id]=1;else delete known[c.id];save();
+const mark=v=>{const c=list[i];if(!c)return;if(v)known[c.id]=1;else delete known[c.id];save();stamp(c.id,!!v);
  if($('mode').value=='due'&&v)build(true);else go(1);};
 const say=()=>{const c=list[i];if(!c||!window.speechSynthesis)return;speechSynthesis.cancel();
  speechSynthesis.speak(new SpeechSynthesisUtterance(flipped?txt(c.a)+'. '+txt(c.x):txt(c.q)));};
@@ -99,19 +102,19 @@ $('scene').onclick=e=>{if(e.target.tagName=='IMG'&&(flipped?e.target.closest('.b
 let fontPct=+localStorage.getItem(FONT)||100;
 const setFont=p=>{fontPct=Math.min(200,Math.max(80,p));document.documentElement.style.setProperty('--fs',fontPct/100);
  $('smaller').disabled=fontPct<=80;$('bigger').disabled=fontPct>=200;try{localStorage.setItem(FONT,fontPct);}catch(e){}};
-setFont(fontPct);$('size').onclick=$('more').onclick=e=>e.stopPropagation();$('smaller').onclick=()=>setFont(fontPct-10);$('bigger').onclick=()=>setFont(fontPct+10);
+setFont(fontPct);$('size').onclick=$('more').onclick=e=>e.stopPropagation();const changeFont=d=>{setFont(fontPct+d);prefsChanged();};$('smaller').onclick=()=>changeFont(-10);$('bigger').onclick=()=>changeFont(10);
 $('zoom').onclick=()=>$('zoom').classList.remove('on');
 $('prev').onclick=()=>go(-1);$('next').onclick=()=>go(1);
 $('again').onclick=()=>mark(0);$('good').onclick=()=>mark(1);$('say').onclick=say;
 $('shuf').onclick=()=>{for(let a=list.length-1;a>0;a--){const b=Math.random()*(a+1)|0;[list[a],list[b]]=[list[b],list[a]];}i=0;render();};
-$('deck').onchange=()=>{localStorage.setItem(DECK,$('deck').value);build();};$('mode').onchange=()=>build();$('q').oninput=()=>build();
+$('deck').onchange=()=>{localStorage.setItem(DECK,$('deck').value);prefsChanged();build();};$('mode').onchange=()=>build();$('q').oninput=()=>build();
 const STEPS=[
  {t:'Welcome 👋',p:`Flashcards for machine learning, deep learning, data mining, algorithms and Python: <b>${ALL.length}</b> cards in ${DECKS.length} decks. This quick tour shows how it works.`},
  {el:'deck',t:'1. Pick a deck',p:'Study one topic, or choose <b>All decks</b> to mix them. Your choice is remembered.'},
  {el:'scene',t:'2. Think, then flip',p:'The dots in the top-left corner show how complex a card is, from 1 to 5. Read the question and answer it in your head. Then <b>click the card</b> or press <kbd>Space</kbd> to flip it.'},
  {el:'scene',flip:1,t:'3. Check the answer',p:'The back shows the answer, and sometimes an explanation or a diagram. Click a diagram to enlarge it, or click <b>Know more</b> to search Google for the topic in a new tab.'},
  {el:'rate',t:'4. Be honest with yourself',p:'Press <b>Know it</b> (<kbd>2</kbd>) if you got it right, or <b>Again</b> (<kbd>1</kbd>) if you didn’t. Use <b>← Prev</b> / <b>Next →</b> to browse without rating.'},
- {el:'stats',t:'5. Track your progress',p:'This counts the cards you know. Progress is saved in this browser.'},
+ {el:'stats',t:'5. Track your progress',p:'This counts the cards you know. Progress is saved in this browser'+(SYNC.url?', and on all your devices if you sign in with Google.':'.')},
  {el:'mode',t:'6. Focus on what’s left',p:'Switch to <b>Not yet known</b> to study only the cards you haven’t marked as known.'},
  {el:'tools',t:'7. Search and shuffle',p:'<b>Search</b> looks through questions, answers and explanations. <b>Shuffle</b> mixes up the order.'},
  {el:'help',t:'You’re all set! 🎉',p:'The cards also work offline once loaded. Shortcuts: <kbd>Space</kbd> flip · <kbd>←</kbd><kbd>→</kbd> move · <kbd>1</kbd> Again · <kbd>2</kbd> Know it · <kbd>S</kbd> speak · <kbd>+</kbd><kbd>−</kbd> text size.<br>Click <b>?</b> any time to see this tour again.'}];
@@ -138,7 +141,90 @@ document.onkeydown=e=>{if(ts>=0){if(e.key=='Escape')tourEnd();else if(e.key=='Ar
  if($('zoom').classList.contains('on')){if(e.key=='Escape'||e.key==' '){e.preventDefault();$('zoom').classList.remove('on');}return;}
  if(e.target.tagName=='INPUT'||e.target.tagName=='SELECT')return;
  if(e.key==' '){e.preventDefault();flip();}else if(e.key=='ArrowRight')go(1);else if(e.key=='ArrowLeft')go(-1);
- else if(e.key=='1')mark(0);else if(e.key=='2')mark(1);else if(e.key.toLowerCase()=='s')say();else if(e.key=='+'||e.key=='=')setFont(fontPct+10);else if(e.key=='-')setFont(fontPct-10);};
+ else if(e.key=='1')mark(0);else if(e.key=='2')mark(1);else if(e.key.toLowerCase()=='s')say();else if(e.key=='+'||e.key=='=')changeFont(10);else if(e.key=='-')changeFont(-10);};
+// Google sign-in and sync; see SETUP-SIGNIN.md. The browser stays the source of truth while studying, so the
+// app is instant and works offline or signed out; changes reach the sheet in the background.
+// Each card has a time stamp: positive = known, negative = not known. The newest change to a card wins.
+const SESSION='mlds.session',USER='mlds.user',STAMPS='mlds.stamps',DIRTY='mlds.dirty',PREFS_AT='mlds.prefsAt',PREFS_DIRTY='mlds.prefsDirty';
+const loadJson=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d;}catch(e){return d;}};
+const store=(k,v)=>{try{localStorage.setItem(k,typeof v=='string'?v:JSON.stringify(v));}catch(e){}};
+let stamps=loadJson(STAMPS,{}),dirty=loadJson(DIRTY,{}),syncBusy=false,syncAgain=false,syncTimer=0,lastPull=0;
+const seconds=()=>Math.floor(Date.now()/1000);
+const session=()=>localStorage.getItem(SESSION)||'';
+const saveSyncState=()=>{store(STAMPS,stamps);store(DIRTY,dirty);};
+function stamp(id,isKnown){const t=Math.max(seconds(),Math.abs(stamps[id]||0)+1);stamps[id]=isKnown?t:-t;
+ if(session())dirty[id]=stamps[id];saveSyncState();queueSync();}
+function prefsChanged(){store(PREFS_AT,String(seconds()));if(session()){store(PREFS_DIRTY,'1');queueSync();}}
+const localPrefs=()=>({font:fontPct,deck:$('deck').value,at:+localStorage.getItem(PREFS_AT)||0});
+const queueSync=()=>{if(!SYNC.url||!session())return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncNow(),4000);};
+const syncStatus=t=>{const el=$('syncState');if(el)el.textContent=t;};
+function callBackend(body,keepalive){return fetch(SYNC.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),keepalive:!!keepalive})
+ .then(r=>r.json()).then(r=>{if(!r.success){const e=new Error(r.error||'Sync failed');e.code=r.code;throw e;}return r;});}
+// Takes in the sheet's data. Newer local changes are kept, and are sent on the next sync.
+function mergeRemote(res,firstLoad){let changed=false;
+ Object.entries(res.progress||{}).forEach(([id,t])=>{if(Math.abs(t)>Math.abs(stamps[id]||0)){stamps[id]=t;delete dirty[id];
+  if(t>0&&!known[id]){known[id]=1;changed=true;}else if(t<0&&known[id]){delete known[id];changed=true;}}});
+ saveSyncState();if(changed)save();
+ const p=res.prefs;if(p&&p.at>(+localStorage.getItem(PREFS_AT)||0)){store(PREFS_AT,String(p.at));setFont(p.font);
+  // Only on load: a sync in the middle of studying must not switch the deck.
+  if(firstLoad&&p.deck&&p.deck!=$('deck').value&&[...$('deck').options].some(o=>o.value==p.deck)){$('deck').value=p.deck;localStorage.setItem(DECK,p.deck);changed=true;}}
+ if(changed){if(!flipped&&ts<0)build(true);else showStats();}}
+function signedOutByServer(){localStorage.removeItem(SESSION);showAccount('Please sign in again to keep syncing.');}
+// Sends pending changes. Resolves to true once everything so far has reached the sheet.
+async function syncNow(opts={}){if(!SYNC.url||!session())return false;
+ if(syncBusy){syncAgain=true;return false;}
+ if(!navigator.onLine){syncStatus('Offline, will sync later');return false;}
+ clearTimeout(syncTimer);const sent={...dirty},sendPrefs=localStorage.getItem(PREFS_DIRTY)=='1',prefs=localPrefs();
+ const hasChanges=Object.keys(sent).length>0||sendPrefs;if(!hasChanges&&!opts.pull)return true;
+ syncBusy=true;syncStatus(hasChanges?'Saving…':'Syncing…');let ok=false;
+ try{const res=await callBackend({action:'sync',session:session(),changes:sent,prefs:sendPrefs?prefs:undefined,pull:!!opts.pull},opts.keepalive);
+  Object.keys(sent).forEach(id=>{if(dirty[id]===sent[id])delete dirty[id];});saveSyncState();
+  if(sendPrefs&&(+localStorage.getItem(PREFS_AT)||0)==prefs.at)localStorage.removeItem(PREFS_DIRTY);
+  if(res.session)store(SESSION,res.session);
+  if(opts.pull){lastPull=Date.now();mergeRemote(res,opts.firstLoad);}
+  ok=true;syncStatus('Synced');
+ }catch(e){if(e.code=='auth')signedOutByServer();else{syncStatus('Not synced yet');clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncNow(),60000);}}
+ syncBusy=false;if(syncAgain){syncAgain=false;queueSync();}
+ return ok&&!Object.keys(dirty).length&&localStorage.getItem(PREFS_DIRTY)!='1';}
+function wipeLocalProgress(){known={};stamps={};dirty={};save();saveSyncState();localStorage.removeItem(PREFS_DIRTY);}
+async function onGoogleCredential(g){showAccount('Signing in…',true);
+ try{const sub=JSON.parse(atob(g.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))).sub;
+  // Another account used this browser and its session ended without a sign-out: keep their progress out of this one.
+  const prev=loadJson(USER,null);if(prev&&prev.sub!=sub)wipeLocalProgress();
+  Object.keys(known).forEach(id=>{if(!stamps[id])stamps[id]=1;});  // from before sync: real, but older than any change on another device
+  const sent={...stamps},prefs=localPrefs(),res=await callBackend({action:'signIn',idToken:g.credential,changes:sent,prefs:prefs.at?prefs:undefined});
+  store(SESSION,res.session);store(USER,res.user);
+  dirty={};Object.keys(stamps).forEach(id=>{if(stamps[id]!==sent[id])dirty[id]=stamps[id];});saveSyncState();  // marked while signing in
+  localStorage.removeItem(PREFS_DIRTY);
+  mergeRemote(res,true);lastPull=Date.now();showAccount();syncStatus('Synced');showStats();queueSync();
+ }catch(e){showAccount(e.code=='forbidden'?'This Google account isn’t allowed to sign in.':'Sign-in failed. Please try again.');}}
+async function signOut(){const btn=$('signOut');btn.disabled=true;syncStatus('Saving…');
+ clearTimeout(syncTimer);while(syncBusy)await new Promise(r=>setTimeout(r,200));
+ if(!await syncNow()){if(!session())return;btn.disabled=false;syncStatus('Couldn’t save your progress. Still signed in, so nothing is lost.');return;}
+ localStorage.removeItem(SESSION);localStorage.removeItem(USER);wipeLocalProgress();
+ if(window.google&&google.accounts)google.accounts.id.disableAutoSelect();
+ build(true);showAccount();}
+let gsiStarted=false;
+function loadGoogleButton(){const box=$('gbtn');if(!box)return;
+ const draw=()=>{const el=$('gbtn');if(!el)return;google.accounts.id.initialize({client_id:SYNC.clientId,callback:onGoogleCredential});
+  google.accounts.id.renderButton(el,{size:'medium',text:'signin_with',shape:'pill'});};
+ if(window.google&&google.accounts)return draw();
+ if(gsiStarted)return;gsiStarted=true;
+ const js=document.createElement('script');js.src='https://accounts.google.com/gsi/client';js.async=true;
+ js.onload=draw;js.onerror=()=>{gsiStarted=false;};document.head.appendChild(js);}
+function showAccount(msg,busy){const a=$('acct'),u=loadJson(USER,null);
+ if(session()&&u&&!busy){const first=String(u.name||u.email||'').split(' ')[0];
+  a.innerHTML='<span title="'+esc(u.email||'')+'">'+esc(first)+'</span><span id="syncState"></span><button id="signOut">Sign out</button>';$('signOut').onclick=signOut;return;}
+ a.innerHTML=(busy?'':'<span id="gbtn"></span>')+(msg?'<span id="syncState">'+esc(msg)+'</span>':'');
+ if(!busy)loadGoogleButton();}
+if(SYNC.clientId&&SYNC.url){$('acct').style.display='';$('privacy').textContent=' · Signing in saves your name, email and progress in a private Google Sheet kept by the site owner.';
+ showAccount();
+ if(session())syncNow({pull:true,firstLoad:true});
+ addEventListener('online',()=>{if(!session())loadGoogleButton();else syncNow({pull:true});});
+ document.addEventListener('visibilitychange',()=>{if(!session())return;
+  if(document.visibilityState=='hidden')syncNow({keepalive:true});
+  else if(Date.now()-lastPull>300000)syncNow({pull:true});});
+}
 build();
 if(!localStorage.getItem(TOUR))setTimeout(tourStart,400);
 
