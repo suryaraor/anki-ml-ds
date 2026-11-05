@@ -1,0 +1,101 @@
+# Level 9 · Transformers & Large Language Models
+Transformer :: A neural architecture built on self-attention that processes sequences in parallel, introduced in 2017.
+"Attention Is All You Need" :: The 2017 Google paper that introduced the transformer.
+Self-attention :: Each token computes weighted connections to the other tokens in the same sequence.
+Query, key and value :: Attention compares a query with keys to get weights, then uses those weights to average the values.
+Scaled dot-product attention :: Attention(Q, K, V) = softmax(QKᵀ / √d) V. Scaling by √d keeps gradients stable.
+Multi-head attention :: Runs several attention operations in parallel so that a model can focus on different relationships.
+Cross-attention :: Attention in which queries come from one sequence and keys and values come from another.
+Causal mask :: Stops a position from attending to future tokens during generation.
+Positional encoding :: Adds position information to tokens, because attention alone ignores order.
+Rotary position embedding (RoPE) :: Encodes position by rotating query and key vectors, and is common in modern LLMs.
+Transformer block :: Self-attention and a feed-forward layer, each with normalization and a residual connection.
+Feed-forward layer (transformer) :: A small MLP applied independently at each token position.
+Foundation model :: A large general-purpose model that can be adapted to many tasks.
+Generative AI :: AI that creates new content such as text, images, audio, video or code.
+Large language model (LLM) :: A large neural network trained on text to predict tokens, which lets it generate and understand language.
+Token (LLM) :: The unit an LLM reads and writes, often a word piece; in English, roughly three-quarters of a word on average.
+Byte-pair encoding (BPE) :: A subword tokenizer that repeatedly merges the most frequent adjacent symbol pairs.
+Vocabulary :: The fixed set of tokens that a tokenizer and model can represent.
+Context window :: The maximum number of tokens a model can consider at once, including input and output.
+Embedding layer :: Converts token IDs into dense vectors that the network can process.
+BERT :: A 2018 Google transformer encoder trained to predict masked words, using context from both directions.
+Encoder-only vs decoder-only transformers :: BERT-style encoders read a whole input at once; GPT-style decoders use a causal mask so they can generate text.
+GPT :: Generative Pre-trained Transformer: OpenAI's family of decoder-only language models.
+GPT-3 :: OpenAI's 2020 language model with 175 billion parameters, which showed how much capability scale alone could add.
+ChatGPT :: OpenAI's conversational assistant, launched in November 2022, which brought generative AI to the mainstream.
+GPT-4 :: OpenAI's March 2023 multimodal model, which accepted images as well as text.
+Claude :: Anthropic's family of AI assistants, trained with an emphasis on safety and helpfulness.
+Multimodal LLM :: An LLM that accepts inputs beyond text, such as images or audio.
+Gemini :: Google DeepMind's family of multimodal models.
+Llama :: Meta's family of open-weight language models.
+Mistral :: A French AI company known for efficient open-weight and commercial language models.
+Open weights vs open source :: Open-weight models publish their weights; truly open-source models also offer training data and code under open terms.
+Autoregressive generation :: Producing output one token at a time, with each new token fed back as input.
+Temperature :: Scales the output probabilities. Low values make output focused; high values make it more varied.
+Top-k sampling :: Samples the next token from the k most likely candidates.
+Top-p (nucleus) sampling :: Samples from the smallest token set whose cumulative probability reaches p.
+Hallucination :: When a model generates fluent but false or unsupported content.
+Knowledge cutoff :: The date after which a model has little or no training data.
+Stop sequence :: A specified string that ends generation when it is produced.
+Prompt :: The input given to a generative model.
+System prompt :: Instructions that set an assistant's role, rules and behavior for a conversation.
+Prompt engineering :: The practice of designing prompts to get better results from a model.
+Zero-shot prompting :: Asking a model to perform a task with no examples.
+Few-shot prompting :: Including a few worked examples in the prompt.
+Chain-of-thought prompting :: Encouraging a model to reason step by step before answering.
+Structured output :: Constraining a model to return a specified format, such as valid JSON.
+Function calling (tool use) :: A model outputs a structured request to call an external tool, then uses the result in its response.
+Base model vs chat model :: A base model simply continues text; a chat model has also been trained to follow instructions in dialogue.
+Pretraining :: The initial stage in which an LLM learns from a huge corpus by predicting the next token.
+Instruction tuning :: Fine-tuning a model on instruction-response pairs so that it follows requests.
+RLHF :: Reinforcement learning from human feedback: tuning a model using human preferences between its responses.
+Reward model :: A model trained on human preferences to score responses during RLHF.
+Constitutional AI :: Anthropic's method of training a model to critique and revise its responses against written principles.
+InstructGPT :: The 2022 OpenAI work showing that RLHF made GPT-3 much better at following instructions.
+Sycophancy :: A tendency for a model to agree with a user or flatter them, even when the user is wrong.
+Scaling laws :: Model performance tends to improve predictably, as a power law, with more data, parameters and compute.
+Chinchilla :: DeepMind's 2022 finding that, for a given compute budget, models should train on much more data than was typical.
+Compute-optimal scaling :: Balancing model size and training data so as to get the best result from a given compute budget.
+Fine-tuning an LLM :: Further training a model on task-specific examples so it adapts to a domain or style.
+LoRA :: Low-Rank Adaptation: a fine-tuning method that trains small added matrices rather than all the weights.
+Attention bottleneck in RNNs :: A fixed-size summary vector can lose information, which motivated attention and then transformers.
+Multi-query attention :: A design in which many attention heads share a single set of keys and values, reducing memory use.
+Key-value (KV) cache :: Stores attention keys and values from earlier tokens so they need not be recomputed during generation.
+Prompt caching :: Reusing processed prompt prefixes across requests, which reduces cost and latency.
+Time to first token (TTFT) :: How long a model takes to begin responding.
+Tokens per second :: The speed at which a model generates output.
+Throughput vs latency tradeoff in LLMs :: Larger batches serve more total tokens per second but can slow each individual response.
+Continuous batching :: Dynamically adding and removing requests from a running batch, which increases GPU utilization.
+GGUF :: A file format for quantized LLM weights, used by llama.cpp for local inference.
+llama.cpp :: A C/C++ engine for running LLMs efficiently on ordinary hardware.
+Ollama :: A tool that makes it easy to download and run LLMs locally.
+vLLM :: A high-throughput LLM serving engine known for its PagedAttention memory management.
+Embedding (text) :: A vector representing the meaning of a piece of text, used for search, clustering and retrieval.
+Vector database :: A database optimized to store embeddings and find the nearest ones to a query.
+Approximate nearest neighbor (ANN) :: Finding very close vectors quickly by giving up guaranteed exact results.
+HNSW :: Hierarchical Navigable Small World: a graph-based index for fast approximate nearest neighbor search.
+Semantic search :: Searching by meaning using embeddings, rather than by exact keyword match.
+BM25 :: A classic keyword ranking function that scores documents by term frequency, rarity and length.
+Hybrid search :: Combining keyword and vector search to get the benefits of both.
+Retrieval-augmented generation (RAG) :: Retrieving relevant documents and adding them to the prompt, so that a model can answer from them.
+Chunking :: Splitting documents into smaller pieces for embedding and retrieval.
+Reranking :: Using a more accurate model to reorder an initial list of retrieved results.
+Cross-encoder :: Scores a query and document together, giving higher accuracy than comparing separate embeddings, but more slowly.
+Faithfulness (RAG) :: Whether an answer is actually supported by the retrieved context.
+Text-to-SQL :: Using a model to turn natural language questions into database queries.
+Benchmark contamination :: Benchmark scores can overstate real ability when test questions leak into training data or models are tuned to the test.
+MMLU :: Massive Multitask Language Understanding: a benchmark of multiple-choice questions across 57 subjects.
+Chatbot Arena (LMArena) :: A leaderboard ranking models from anonymous, head-to-head human preference votes.
+LLM evals :: Systematic tests of LLM output quality on representative tasks.
+Prompt injection :: An attack in which malicious text causes a model to follow an attacker's instructions rather than the developer's.
+Indirect prompt injection :: Prompt injection hidden in content that a model reads, such as a web page or document.
+Jailbreak :: A prompt crafted to get a model to bypass its safety training.
+Red teaming :: Deliberately probing a system for harmful behavior and weaknesses before attackers or users find them.
+Guardrails :: Checks around a model's inputs and outputs that enforce safety and policy rules.
+Diffusion model :: A generative model that learns to reverse a gradual noising process, creating data from noise.
+Denoising diffusion (DDPM) :: A diffusion approach in which a network learns to predict and remove noise step by step.
+Latent diffusion :: Runs diffusion in a compressed latent space, which greatly reduces cost. It underlies Stable Diffusion.
+Classifier-free guidance :: Steers diffusion toward a prompt by combining conditional and unconditional predictions.
+CLIP :: OpenAI's model that learns a shared embedding space for images and text.
+DALL·E, Midjourney and Stable Diffusion :: Well-known text-to-image generation systems.

@@ -1,0 +1,101 @@
+# Level 4 · Core ML Ideas & Classic Algorithms
+Parameter :: A value the model learns from data during training, such as a weight in linear regression.
+Hyperparameter :: A setting chosen before training that controls learning, such as tree depth or learning rate.
+Loss function :: A function that measures how wrong a model's predictions are; training tries to minimize it.
+Cost function :: The loss averaged over the whole training set, sometimes with regularization terms added.
+Objective function :: The overall function being optimized during training, whether minimized or maximized.
+Mean squared error (MSE) :: The average squared difference between predictions and targets. It penalizes large errors heavily.
+Mean absolute error (MAE) :: The average absolute difference between predictions and targets. It is more robust to outliers than MSE.
+Root mean squared error (RMSE) :: The square root of MSE, which puts the error back in the target's original units.
+Huber loss :: A loss that is quadratic for small errors and linear for large ones, combining the strengths of MSE and MAE.
+Cross-entropy loss :: A classification loss that penalizes confident wrong predictions, based on the predicted probability of the true class.
+Hinge loss :: The loss used by support vector machines. It penalizes points that are misclassified or inside the margin.
+Linear regression :: Predicts a numeric target as a weighted sum of features, usually fitted by least squares.
+Ordinary least squares (OLS) :: Fits a linear model by minimizing the sum of squared residuals.
+Normal equation :: The closed-form linear regression solution: θ = (XᵀX)⁻¹Xᵀy.
+Linear regression assumptions :: Linearity, independent errors, constant error variance (homoscedasticity) and normally distributed errors for valid inference.
+Multicollinearity :: Strong correlation among features, which makes linear model coefficients unstable and hard to interpret.
+Variance inflation factor (VIF) :: A measure of how much a coefficient's variance is inflated by correlation with the other features.
+Polynomial regression :: Linear regression on polynomial powers of the features, which allows a curved fit.
+Logistic regression :: A linear classifier that passes a weighted sum through a sigmoid to output a class probability.
+Sigmoid function :: σ(x) = 1 / (1 + e⁻ˣ): squashes any real number into the range (0, 1).
+Log-odds (logit) :: log(p / (1 − p)). Logistic regression models the log-odds as a linear function of the features.
+Softmax regression :: Extends logistic regression to multiple classes by converting scores into probabilities that sum to 1.
+Decision boundary :: The surface in feature space that separates the regions a classifier assigns to different classes.
+K-nearest neighbors (KNN) :: Predicts from the labels of the k closest training points. It is a lazy learner with no real training step.
+Naive Bayes :: A probabilistic classifier that applies Bayes' theorem and assumes features are independent given the class.
+Laplace smoothing :: Adding a small count to every feature-class pair so unseen values do not produce zero probability.
+Decision tree :: A model that splits data with a series of if-then feature tests, ending in leaf predictions.
+Gini impurity :: The chance of misclassifying a random item if it is labeled according to the node's class mix. Decision trees use it to choose splits.
+Information gain :: The reduction in entropy achieved by a split. Decision trees can pick splits that maximize it.
+Pruning :: Removing tree branches that add little predictive value, which reduces overfitting.
+CART :: Classification and Regression Trees: an algorithm that builds binary trees using Gini impurity or squared error.
+Support vector machine (SVM) :: A classifier that finds the boundary with the largest margin between classes.
+Margin :: The distance between an SVM's decision boundary and the nearest training points.
+Support vectors :: The training points closest to the SVM boundary, which alone determine its position.
+Kernel trick :: Computing inner products as if data were in a higher-dimensional space, without explicitly transforming it.
+RBF kernel :: A similarity function that decays with squared distance between points; a common default for non-linear SVMs.
+Ensemble learning :: Combining several models so that the group performs better than the individual members.
+Bagging :: Bootstrap aggregating: training models on resampled data and averaging their outputs to reduce variance.
+Boosting :: Training models one after another, each focusing on the errors of those before, which mainly reduces bias.
+Stacking :: Using a meta-model to learn how to combine the predictions of several base models.
+Voting classifier :: An ensemble that predicts by majority vote (hard) or averaged probabilities (soft).
+Random forest :: An ensemble of decision trees trained with bagging and random feature subsets at each split.
+Out-of-bag (OOB) error :: A validation estimate for bagging, computed on the samples each tree did not see during training.
+Extra Trees :: Extremely randomized trees: a forest that also picks split thresholds at random, trading a little bias for lower variance.
+AdaBoost :: A boosting method that reweights examples to focus on those misclassified earlier, combining weak learners.
+Gradient boosting :: Builds an ensemble in stages, with each new model fitting the negative gradient of the loss (the residuals, for squared error).
+XGBoost :: A fast, regularized gradient boosting library, long a favorite for tabular data.
+LightGBM :: A gradient boosting library that uses histogram-based splits and leaf-wise tree growth for speed.
+CatBoost :: A gradient boosting library with built-in handling of categorical features through ordered target statistics.
+K-means clustering :: Partitions data into k clusters by alternately assigning points to the nearest centroid and recomputing centroids.
+K-means++ :: A k-means initialization that spreads the starting centroids apart, improving results and convergence.
+Elbow method :: Choosing k by plotting within-cluster error against k and looking for the bend.
+Silhouette score :: A clustering metric from −1 to 1 comparing how close a point is to its own cluster versus the nearest other cluster.
+Hierarchical clustering :: Builds a tree of nested clusters, either by merging up (agglomerative) or splitting down (divisive).
+Dendrogram :: A tree diagram showing the order and distances of merges in hierarchical clustering.
+DBSCAN :: A density-based clustering method that finds arbitrarily shaped clusters and labels sparse points as noise.
+Gaussian mixture model (GMM) :: Models data as a mix of Gaussian components, giving each point a soft cluster membership.
+Expectation-maximization (EM) :: An iterative algorithm for models with hidden variables, alternating between estimating them and updating parameters.
+Curse of dimensionality :: As features increase, data grows sparse and distances lose meaning, making learning harder.
+Dimensionality reduction :: Reducing the number of features while keeping as much useful information as possible.
+Principal component analysis (PCA) :: Projects data onto orthogonal directions that capture the most variance.
+Explained variance ratio :: The share of total variance captured by each principal component.
+Singular value decomposition (SVD) :: Factorizes a matrix as UΣVᵀ. It underlies PCA and many recommendation methods.
+Linear discriminant analysis (LDA) :: A supervised dimensionality reduction method that finds directions which best separate the classes.
+t-SNE :: A non-linear method for visualizing high-dimensional data in 2D or 3D by preserving local neighborhoods.
+UMAP :: A non-linear dimensionality reduction method like t-SNE, usually faster and better at keeping some global structure.
+Anomaly detection :: Identifying rare items or events that differ significantly from normal behavior.
+Isolation Forest :: Detects anomalies by randomly partitioning data; anomalies take fewer splits to isolate.
+One-class SVM :: Learns a boundary around normal data, so that points outside it can be flagged as anomalies.
+Association rules :: If-then patterns in transaction data, such as "people who buy bread often buy butter."
+Support, confidence and lift :: Support is how often items occur together; confidence is P(B|A); lift compares confidence to B's base rate.
+Apriori algorithm :: Mines frequent itemsets, relying on the fact that every subset of a frequent itemset must also be frequent.
+Collaborative filtering :: Recommends items using the behavior of similar users or similar items, not the item's content.
+Content-based filtering :: Recommends items whose attributes resemble what the user has liked before.
+Matrix factorization :: Decomposes a user-item matrix into latent user and item factors for recommendation.
+Cold start problem :: The difficulty of recommending to new users or new items that have little or no interaction history.
+Time series :: Data points indexed in time order, such as daily sales.
+Seasonality :: A regular pattern that repeats at a fixed period, such as weekly or yearly.
+Stationarity :: A time series property in which the mean, variance and autocorrelation stay stable over time.
+Autocorrelation :: The correlation of a time series with lagged copies of itself.
+ARIMA :: AutoRegressive Integrated Moving Average: a time series forecasting model combining lags, differencing and past errors.
+Exponential smoothing :: Forecasting with weighted averages that give more weight to recent observations.
+Prophet :: A forecasting library from Meta that models trend, seasonality and holidays additively.
+Gradient descent :: An optimization method that repeatedly moves parameters in the direction that most reduces the loss.
+Learning rate :: The step size of each gradient descent update. Too high diverges; too low is slow.
+Batch gradient descent :: Computes each update using the whole training set.
+Stochastic gradient descent (SGD) :: Updates parameters using one example at a time. It is noisy but cheap, and the term often also covers mini-batches.
+Mini-batch gradient descent :: Updates parameters using small batches, balancing stable gradients with speed.
+Convex function :: A function where any local minimum is also the global minimum, which makes optimization easier.
+Local minimum :: A point lower than its neighbors but not necessarily the lowest overall.
+Epoch :: One complete pass through the whole training set.
+Parametric vs non-parametric models :: Parametric models have a fixed number of parameters; non-parametric models can grow in complexity with the data.
+Generative vs discriminative models :: Generative models learn how the data is distributed, P(x, y); discriminative models learn the class boundary, P(y|x).
+Lazy vs eager learning :: Lazy learners defer work until prediction, like KNN; eager learners build a model up front.
+Online learning :: Updating a model incrementally as new data arrives, instead of retraining from scratch.
+Semi-supervised learning :: Training with a small amount of labeled data and a large amount of unlabeled data.
+Self-supervised learning :: Generating labels from the data itself, for example by predicting a hidden part of the input.
+Active learning :: The model picks which unlabeled examples would be most useful for humans to label next.
+Multi-armed bandit :: A simple reinforcement problem of balancing trying options (exploration) with using the best so far (exploitation).
+No free lunch theorem :: Averaged over all possible problems, no learning algorithm is better than any other, so assumptions must fit the task.

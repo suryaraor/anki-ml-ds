@@ -1,7 +1,7 @@
 // Service worker for the flashcards (generated into flashcards/sw.js by build.py; edit sw-template.js).
 // Every build gets a new VERSION only when the cards or images change. A new version downloads all
 // files in the background, then the page offers a "Refresh" button; old caches are deleted on switch.
-const VERSION = '8aabfcc35dbb';
+const VERSION = '7f1a5dd3e792';
 const PREFIX = 'ml-ds-flashcards-';          // CacheStorage is shared by every repo on *.github.io
 const CACHE = PREFIX + VERSION;
 const FILES = ["index.html", "media/paste-564b105c5e15e5322403f52e18203d4d395c19df.jpg", "media/paste-590648a629258f351032192b5d43360e03efc06f.jpg", "media/paste-6252ba5390a5439c8d9aae9adc120f1604e65950.jpg", "media/paste-77361644ec8220b127b812f84d816937bef00266.jpg", "media/paste-9bca3656e72b9607b7ed707921cf6b7d4af2c2f2.jpg", "media/paste-acff2f0ed0a7f3db1333c6ec69a06bb0988c08bc.jpg", "media/paste-c1a025d3d76a38243f9c2bcc5d7a87db35ff24ed.jpg", "media/paste-cd71ebbc561bf2c24a5c2e4816b5ad952eff1d5e.jpg", "media/paste-d219be8b71c6a527375335139e2474bf752d8649.jpg", "media/paste-d33dac366ee933af5eefafcef0e711a542379225.jpg", "media/paste-fc4b013badf94d0449eb60fd901f19c0bd8fa3d5.jpg"];

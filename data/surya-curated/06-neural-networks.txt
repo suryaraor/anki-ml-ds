@@ -1,0 +1,101 @@
+# Level 6 · Neural Networks & Deep Learning
+Neural network :: A model made of layers of connected units that transform inputs into outputs through learned weights.
+Artificial neuron :: A unit that computes a weighted sum of its inputs plus a bias, then applies an activation function.
+Perceptron :: Frank Rosenblatt's early single-layer linear classifier, introduced in 1958.
+XOR problem :: A single perceptron cannot learn XOR because the classes are not linearly separable. It takes a hidden layer.
+Multilayer perceptron (MLP) :: A feed-forward network with one or more hidden layers of fully connected neurons.
+Input layer :: The first layer of a network, which receives the features.
+Hidden layer :: Any layer between input and output, where intermediate representations are learned.
+Output layer :: The final layer, which produces the prediction.
+Weight :: A learned value that scales how strongly one neuron's output influences the next.
+Bias term :: A learned constant added to a neuron's weighted sum, which shifts its activation.
+Fully connected layer :: A layer in which every neuron connects to every neuron in the previous layer (also called a dense layer).
+Universal approximation theorem :: A network with enough hidden units and a suitable activation can approximate any continuous function on a bounded domain.
+Activation function :: A non-linear function applied to a neuron's output. Without it, stacked layers collapse into one linear transformation.
+ReLU :: Rectified linear unit: f(x) = max(0, x). Simple, fast and the long-time default for hidden layers.
+Dying ReLU problem :: Neurons stuck in the zero region output zero, get zero gradient and stop learning.
+Leaky ReLU :: A ReLU variant with a small slope for negative inputs, which keeps gradients from vanishing to zero.
+GELU :: Gaussian Error Linear Unit: a smooth ReLU-like activation widely used in transformers.
+Tanh :: An activation that maps inputs to (−1, 1), with zero-centered outputs.
+Softmax :: Converts a vector of scores into probabilities that sum to 1.
+Logits :: The raw, unnormalized scores a model outputs before softmax or sigmoid.
+Forward pass :: Computing a network's output from its input, layer by layer.
+Backpropagation :: Using the chain rule to compute the gradient of the loss with respect to every weight, working from output back to input.
+Chain rule :: The calculus rule for differentiating composed functions, which is the mathematical basis of backpropagation.
+Gradient :: The vector of partial derivatives pointing in the direction of steepest increase of a function.
+Computational graph :: A graph of the operations in a model, used by frameworks to compute gradients.
+Automatic differentiation :: Computing exact derivatives by applying the chain rule through a program's operations.
+Tensor :: A multi-dimensional array and the core data structure of deep learning frameworks.
+PyTorch :: A deep learning framework from Meta known for its dynamic graphs and Pythonic style, now dominant in research.
+TensorFlow :: Google's deep learning framework, with strong deployment tools.
+Keras :: A high-level neural network API, which is now multi-backend.
+JAX :: Google's library for high-performance numerical computing, with composable autodiff, JIT compilation and vectorization.
+GPU :: Graphics processing unit: a chip with many parallel cores, well suited to the matrix math of deep learning.
+TPU :: Tensor Processing Unit: Google's custom chip built to accelerate neural network workloads.
+CUDA :: NVIDIA's platform for programming its GPUs, a major part of its advantage in AI.
+Batch size :: The number of examples processed in each training step.
+Iteration :: One parameter update, usually from one batch.
+Momentum :: Speeds up gradient descent by accumulating an exponentially decaying average of past gradients.
+Nesterov momentum :: A variant of momentum that computes the gradient at the point momentum is about to reach.
+Adagrad :: An optimizer that adapts per-parameter learning rates using accumulated squared gradients.
+RMSProp :: An optimizer that adapts learning rates using a moving average of squared gradients.
+Adam :: An optimizer combining momentum with per-parameter adaptive learning rates, a popular default.
+AdamW :: Adam with decoupled weight decay, the standard choice for training transformers.
+Learning rate schedule :: A plan for changing the learning rate during training.
+Learning rate warmup :: Starting with a small learning rate and increasing it gradually at the start of training.
+Cosine annealing :: Decreasing the learning rate along a cosine curve.
+Vanishing gradients :: Gradients shrink as they pass back through many layers, so early layers barely learn.
+Exploding gradients :: Gradients grow uncontrollably as they pass back through layers, which destabilizes training.
+Gradient clipping :: Limiting the size of gradients to prevent exploding gradients.
+Weight initialization :: Setting a network's starting weights; poor choices can stop gradients from flowing.
+Xavier (Glorot) initialization :: Scales initial weights to keep variance stable across layers, suited to tanh and sigmoid.
+He initialization :: A weight initialization scaled for ReLU activations.
+Batch normalization :: Normalizes layer inputs using batch statistics, which speeds up and stabilizes training.
+Layer normalization :: Normalizes across the features of each example, independent of batch size. It is standard in transformers.
+Dropout :: Randomly disables neurons during training, reducing co-adaptation and overfitting.
+Weight decay :: A penalty that shrinks weights toward zero during training.
+Label smoothing :: Replacing hard targets with slightly softened ones, which discourages overconfidence.
+Data augmentation :: Expanding training data with label-preserving changes, such as flips, crops or added noise.
+Mixup :: An augmentation that trains on weighted blends of pairs of examples and their labels.
+Skip connection :: A shortcut that passes a layer's input forward past one or more layers, helping gradients flow.
+Residual block :: A block that learns a change to its input and adds it back: output = x + F(x).
+Autoencoder :: A network trained to reconstruct its input through a narrower bottleneck, which learns a compact representation.
+Latent space :: The compressed representation space that a model learns, in which similar items lie close together.
+Denoising autoencoder :: An autoencoder trained to reconstruct a clean input from a corrupted version.
+Variational autoencoder (VAE) :: An autoencoder that learns a probability distribution over the latent space, so new data can be sampled.
+Reparameterization trick :: Rewriting a random sample as a deterministic function plus noise, so that gradients can flow through sampling.
+Generative adversarial network (GAN) :: A generator tries to fool a discriminator that is learning to tell real data from fakes.
+Mode collapse :: A GAN failure where the generator produces only a narrow variety of outputs.
+Wasserstein GAN :: A GAN using Earth Mover's distance as its loss, which makes training more stable.
+Transfer learning :: Reusing a model trained on one task as the starting point for a related task.
+Pretrained model :: A model already trained on a large dataset, ready to reuse or adapt.
+Fine-tuning :: Continuing to train a pretrained model on new data, usually with a small learning rate.
+Feature extraction (transfer learning) :: Freezing a pretrained model and training only a new final layer on top of it.
+Multi-task learning :: Training one model on several related tasks at once, using shared representations.
+Few-shot learning :: Learning to perform a task from only a handful of examples.
+Zero-shot learning :: Recognizing classes never seen during training, using side information such as descriptions.
+Meta-learning :: Learning how to learn, so that a model adapts to new tasks quickly.
+Contrastive learning :: Learns representations by pulling similar pairs together and pushing dissimilar pairs apart.
+Knowledge distillation :: Training a small student model to reproduce the outputs of a larger teacher model.
+Neural architecture search (NAS) :: Automatically searching for a high-performing network design.
+Double descent :: Test error can fall, rise near the interpolation point, then fall again as model capacity keeps growing.
+Lottery ticket hypothesis :: Dense networks contain small subnetworks that, trained from their original initialization, can perform as well as the full network.
+Mixed-precision training :: Using 16-bit and 32-bit floats together, which saves memory and speeds up training.
+Gradient accumulation :: Summing gradients over several small batches before updating, which simulates a larger batch.
+Distributed data parallel (DDP) :: Training with copies of a model on multiple GPUs, synchronizing gradients each step.
+Reinforcement learning agent :: The learner that takes actions in an environment to maximize cumulative reward.
+Markov decision process (MDP) :: The formal model of reinforcement learning, made up of states, actions, transitions and rewards.
+Policy :: The strategy that maps states to actions in reinforcement learning.
+Value function :: The expected cumulative future reward from a state, under a given policy.
+Exploration vs exploitation :: The tradeoff between trying uncertain actions for information and choosing the best known action for reward.
+Discount factor (γ) :: A number from 0 to 1 that sets how much future rewards count compared with immediate ones.
+Q-learning :: A reinforcement learning method that learns the value of each action in each state, without a model of the environment.
+Deep Q-Network (DQN) :: Q-learning with a neural network, famous for learning Atari games from pixels.
+Policy gradient :: Reinforcement learning methods that directly optimize the policy by following the gradient of expected reward.
+Actor-critic :: A method in which an actor chooses actions and a critic estimates their value to guide learning.
+Proximal Policy Optimization (PPO) :: A popular policy gradient method that limits how far each update can change the policy.
+Model-free vs model-based RL :: Model-free methods learn directly from experience; model-based methods learn or use a model of the environment.
+AlphaGo :: DeepMind's system combining deep networks and tree search, which beat Lee Sedol at Go in 2016.
+AlexNet moment (2012) :: A deep convolutional network won the ImageNet competition by a wide margin, setting off the modern deep learning boom.
+Hinton, LeCun and Bengio :: The "godfathers of deep learning," who shared the 2018 Turing Award.
+Hopfield and Hinton Nobel Prize (2024) :: John Hopfield and Geoffrey Hinton received the Nobel Prize in Physics for foundational work on neural networks.

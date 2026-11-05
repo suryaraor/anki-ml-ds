@@ -1,0 +1,101 @@
+# Level 5 · Measuring Models & Preparing Features
+Overfitting :: When a model learns noise in the training data, so it performs well there but poorly on new data.
+Underfitting :: When a model is too simple to capture the underlying pattern, so it performs poorly even on training data.
+Generalization :: A model's ability to perform well on new data it has not seen.
+Generalization gap :: The difference between a model's performance on training data and on unseen data.
+Bias-variance tradeoff :: Simple models tend to err through bias, flexible models through variance; good models balance the two.
+Bias (model error) :: Error from overly simple assumptions, which causes a model to miss real patterns.
+Variance (model error) :: Error from sensitivity to the particular training set, which causes a model to fit noise.
+Irreducible error :: The noise inherent in a problem, which no model can remove.
+Regularization :: Techniques that constrain a model to reduce overfitting, such as penalizing large weights.
+L1 regularization (Lasso) :: Adds the sum of absolute weights to the loss, which drives some weights to exactly zero.
+L2 regularization (Ridge) :: Adds the sum of squared weights to the loss, which shrinks weights without usually zeroing them.
+Elastic Net :: Combines L1 and L2 penalties.
+Early stopping :: Halting training when validation performance stops improving.
+Holdout method :: Splitting data once into separate training and test portions.
+Stratified split :: A train-test split that keeps class proportions the same in both parts.
+K-fold cross-validation :: Splits data into k folds, training on k−1 and validating on the remaining one, rotating through all k.
+Stratified k-fold :: K-fold cross-validation that preserves each fold's class proportions.
+Leave-one-out cross-validation :: K-fold where k equals the number of samples. It is accurate on small data but costly.
+Nested cross-validation :: An outer loop estimates performance while an inner loop tunes hyperparameters, avoiding optimistic estimates.
+Time series split :: Validation that always trains on the past and tests on the future, which avoids look-ahead leakage.
+Group k-fold :: Keeps all samples from the same group, such as one patient, in a single fold.
+Data leakage :: When training uses information unavailable at prediction time, which makes results look unrealistically good.
+Target leakage :: A feature that directly encodes or is produced after the target, such as "refund issued" when predicting a return.
+Train-test contamination :: Letting test data influence training, for example by fitting a scaler on the whole dataset.
+Confusion matrix :: A table of true positives, false positives, true negatives and false negatives.
+True positive (TP) :: A positive case correctly predicted as positive.
+False positive (FP) :: A negative case wrongly predicted as positive.
+True negative (TN) :: A negative case correctly predicted as negative.
+False negative (FN) :: A positive case wrongly predicted as negative.
+Precision :: TP / (TP + FP): of the items predicted positive, the share that really are.
+Recall (sensitivity) :: TP / (TP + FN): of the actual positives, the share the model found.
+Specificity :: TN / (TN + FP): of the actual negatives, the share correctly identified.
+F1 score :: The harmonic mean of precision and recall: 2PR / (P + R).
+F-beta score :: A generalized F1 in which β weights recall relative to precision.
+Macro vs micro averaging :: Macro averages the metric per class equally; micro pools all decisions, so frequent classes count more.
+Balanced accuracy :: The average of recall across classes, which is useful for imbalanced data.
+Matthews correlation coefficient (MCC) :: A balanced metric from −1 to +1 that uses all four confusion-matrix cells.
+Cohen's kappa :: Measures agreement between two raters or a model and labels, adjusted for agreement expected by chance.
+ROC curve :: Plots the true positive rate against the false positive rate across classification thresholds.
+AUC (area under the ROC curve) :: The probability that the model ranks a random positive above a random negative. 0.5 is chance level.
+Precision-recall curve :: Plots precision against recall across thresholds. It is more informative than ROC when positives are rare.
+Average precision (AP) :: A summary of the precision-recall curve, roughly the area beneath it.
+Log loss :: Cross-entropy used as an evaluation metric; it rewards well-calibrated probabilities.
+Classification threshold :: The probability cutoff above which a prediction is labeled positive. It can be tuned to trade precision against recall.
+Precision-recall tradeoff :: Raising the classification threshold usually increases precision and lowers recall, and lowering it does the reverse.
+Accuracy paradox :: A model can score high accuracy on imbalanced data by always predicting the majority class.
+Calibration :: How well predicted probabilities match observed frequencies; 80% predictions should be right about 80% of the time.
+Reliability diagram :: A plot of predicted probability against observed frequency, used to check calibration.
+Brier score :: The mean squared difference between predicted probabilities and actual outcomes.
+Platt scaling :: Calibrating a model's scores by fitting a logistic regression on top of them.
+Isotonic regression :: A non-parametric calibration method that fits a piecewise-constant, non-decreasing function.
+Adjusted R² :: R² penalized for the number of features, so adding useless predictors does not improve it.
+MAPE :: Mean absolute percentage error. It is easy to interpret but unstable when true values are near zero.
+AIC and BIC :: Model selection criteria that reward fit and penalize complexity. BIC penalizes complexity more for large samples.
+Learning curve :: A plot of performance against training size or time, used to diagnose overfitting and underfitting.
+Baseline model :: A very simple reference model, such as always predicting the mean, that a real model must beat.
+Grid search :: Tries every combination of a specified set of hyperparameter values.
+Random search :: Samples hyperparameter combinations randomly, often more efficient than grid search in high dimensions.
+Bayesian optimization :: Uses a surrogate model of past trials to choose which hyperparameters to try next.
+Successive halving (Hyperband) :: Gives many configurations small budgets and repeatedly keeps only the best for more resources.
+AutoML :: Automating model selection, feature processing and tuning.
+Feature engineering :: Using domain knowledge to create or transform inputs that make models more effective.
+Feature selection :: Choosing a useful subset of features and discarding the rest.
+Filter methods :: Selecting features using a statistic such as correlation or mutual information, independently of the model.
+Wrapper methods :: Selecting features by training a model on different subsets, such as recursive feature elimination.
+Embedded methods :: Feature selection that happens during model training, such as L1 regularization.
+Mutual information :: A measure of how much knowing one variable reduces uncertainty about another; it captures non-linear relationships.
+One-hot encoding :: Representing a category as a binary vector with a 1 in that category's position and 0 elsewhere.
+Label encoding :: Mapping each category to an integer. It implies an order that linear models may misinterpret.
+Ordinal encoding :: Mapping ordered categories to integers that preserve their order.
+Target encoding :: Replacing a category with the mean target for that category. It must be done within folds to avoid leakage.
+Frequency encoding :: Replacing a category with how often it appears.
+Feature hashing :: Mapping categories into a fixed number of columns with a hash function; collisions are possible.
+High cardinality :: A categorical feature with very many distinct values, such as a user ID.
+Binning :: Grouping continuous values into discrete intervals, such as age bands.
+Log transform :: Applying a logarithm to reduce right skew and compress large values.
+Box-Cox transformation :: A family of power transformations that make positive data more normal.
+Interaction feature :: A feature combining two others, such as their product, to capture a joint effect.
+Min-max scaling :: Rescales a feature to a fixed range, usually 0 to 1.
+Standardization :: Rescales a feature to mean 0 and standard deviation 1.
+Robust scaling :: Rescales using the median and IQR, which limits the effect of outliers.
+When scaling matters :: Distance-based and gradient-based models such as KNN, SVM, PCA and neural networks need it; tree models generally do not.
+Imputation :: Filling in missing values using a statistic or a model.
+MCAR, MAR and MNAR :: Missing completely at random, missing at random (explained by other variables) and missing not at random (related to the missing value itself).
+KNN imputation :: Filling a missing value using the values of the most similar rows.
+Winsorization :: Capping extreme values at chosen percentiles rather than removing them.
+Class imbalance :: When one class has many more examples than the others, such as fraud detection data.
+Random oversampling :: Duplicating examples from the minority class to balance the data.
+Random undersampling :: Removing examples from the majority class to balance the data.
+SMOTE :: Creates synthetic minority examples by interpolating between neighboring minority points.
+Class weights :: Increasing the loss penalty for minority classes during training, without changing the data.
+Sklearn Pipeline :: Chains preprocessing and modeling steps so that they are fitted only on training folds, which prevents leakage.
+Feature importance :: A score for how much each feature contributes to a model's predictions.
+Permutation importance :: Measures how much performance drops when a feature's values are randomly shuffled.
+Partial dependence plot (PDP) :: Shows how predictions change on average as one feature varies.
+SHAP :: SHapley Additive exPlanations: attributes a prediction to features using Shapley values from game theory.
+LIME :: Explains an individual prediction by fitting a simple model to the behavior around that input.
+Model interpretability :: How easily a person can understand why a model makes its predictions.
+Global vs local explanation :: Global explanations describe overall model behavior; local explanations describe one prediction.
+Occam's razor (in ML) :: Among models that perform about equally well, prefer the simpler one.

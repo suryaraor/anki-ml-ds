@@ -1,0 +1,101 @@
+# Level 3 · Data Tools: Python, SQL, Pandas, Charts
+Python :: A general-purpose, readable programming language and the most widely used language for data science and ML.
+R :: A programming language built for statistics and data visualization, popular in academia and research.
+Jupyter Notebook :: An interactive document that mixes runnable code, output, charts and notes in cells.
+Google Colab :: A hosted notebook service that runs in the browser and offers free or paid access to GPUs.
+IDE (integrated development environment) :: An application for writing, running and debugging code, such as VS Code or PyCharm.
+Virtual environment :: An isolated Python installation with its own packages, so that projects do not conflict with each other.
+pip :: Python's standard package installer, which downloads libraries from PyPI.
+conda :: A package and environment manager, common in data science because it also handles non-Python dependencies.
+NumPy :: The core Python library for fast n-dimensional arrays and numerical computing.
+Vectorization :: Applying an operation to a whole array at once rather than looping, which is much faster in NumPy and pandas.
+Broadcasting :: NumPy's rules for automatically stretching arrays of different shapes so element-wise operations can work.
+pandas :: The Python library for tabular data, built around the DataFrame and Series.
+DataFrame :: A two-dimensional labeled table with named columns, where each column can have its own type.
+Series :: A one-dimensional labeled array in pandas; each column of a DataFrame is a Series.
+pandas loc vs iloc :: loc selects by label; iloc selects by integer position.
+pandas groupby :: Splits rows into groups, applies an aggregation or transformation to each, and combines the results.
+pandas merge :: Combines two DataFrames on key columns, similar to a SQL join.
+Pivot table :: A summary table that aggregates values by the categories placed in its rows and columns.
+pandas melt :: Reshapes a table from wide format to long format.
+Wide vs long format :: Wide format has one row per subject with a column per measure; long format has one row per subject-measure pair.
+Tidy data :: A convention where each variable is a column, each observation is a row and each observation type is its own table.
+CSV (comma-separated values) :: A plain-text tabular file format in which each line is a row and commas separate the fields.
+JSON (JavaScript Object Notation) :: A lightweight text format of nested key-value pairs and arrays, common in web APIs.
+XML :: A markup language that stores hierarchical data using custom tags.
+Parquet :: A compressed columnar file format, efficient for analytics because queries read only the columns they need.
+API (application programming interface) :: A defined way for programs to talk to each other, often used to request data over the web.
+REST API :: A web API style that uses HTTP methods such as GET and POST to act on resources identified by URLs.
+Web scraping :: Automatically extracting data from web pages, subject to each site's terms and the law.
+SQL (Structured Query Language) :: The standard language for querying and managing data in relational databases.
+Relational database :: A database that stores data in tables linked by keys, such as PostgreSQL or MySQL.
+NoSQL database :: A non-relational database, such as a document, key-value, column-family or graph store, built for flexible schemas or scale.
+Primary key :: A column or set of columns that uniquely identifies each row in a table.
+Foreign key :: A column that references the primary key of another table, linking the two tables.
+Schema :: The structure of a database: its tables, columns, data types and relationships.
+Normalization (databases) :: Organizing tables to reduce redundancy and avoid update anomalies.
+Denormalization :: Deliberately adding redundant data to tables so that read queries run faster.
+SQL SELECT :: The clause that chooses which columns or expressions a query returns.
+SQL WHERE :: Filters individual rows before any grouping takes place.
+SQL GROUP BY :: Groups rows with the same values so aggregate functions can be computed per group.
+SQL HAVING :: Filters groups after aggregation, whereas WHERE filters rows before it.
+SQL ORDER BY :: Sorts the result set by one or more columns.
+SQL DISTINCT :: Removes duplicate rows from the result set.
+SQL CASE WHEN :: Adds conditional if-then logic inside a query, such as bucketing values into labels.
+Aggregate function :: A function that returns one value from many rows, such as COUNT, SUM, AVG, MIN or MAX.
+SQL NULL :: A marker for a missing or unknown value. Comparisons need IS NULL because NULL = NULL is not true.
+INNER JOIN :: Returns only the rows that have matching keys in both tables.
+LEFT JOIN :: Returns all rows from the left table, plus matches from the right, with NULLs where there is no match.
+FULL OUTER JOIN :: Returns all rows from both tables, matched where possible and NULL-filled otherwise.
+CROSS JOIN :: Returns the Cartesian product: every row of one table paired with every row of the other.
+Self join :: Joining a table to itself, for example to pair employees with their managers.
+UNION vs UNION ALL :: Both stack query results; UNION removes duplicates, while UNION ALL keeps them and is faster.
+Subquery :: A query nested inside another SQL query.
+Common table expression (CTE) :: A named temporary result defined with WITH, used to make complex queries readable or recursive.
+Window function :: A SQL function that computes across a set of related rows while keeping every row, using OVER(PARTITION BY ... ORDER BY ...).
+ROW_NUMBER vs RANK vs DENSE_RANK :: ROW_NUMBER is always unique; RANK gives ties the same rank and leaves gaps; DENSE_RANK gives ties the same rank with no gaps.
+LAG and LEAD :: Window functions that read a value from an earlier or later row, useful for period-over-period change.
+Database index :: A data structure that speeds up lookups on a column, at the cost of extra storage and slower writes.
+Query execution plan :: The database's chosen strategy for running a query; inspected with EXPLAIN to find slow steps.
+ACID :: Atomicity, Consistency, Isolation and Durability: the guarantees of reliable database transactions.
+OLTP vs OLAP :: OLTP handles many small transactions for operations; OLAP runs large analytical queries over historical data.
+Exploratory data analysis (EDA) :: The first look at a dataset, using summaries and plots to understand it and spot problems before modeling.
+Data profiling :: Reviewing a dataset's types, ranges, missing rates and distinct counts to assess its quality.
+Data type :: The kind of value a field holds, such as integer, float, string, boolean or date.
+Type casting :: Converting a value from one data type to another, such as a string to a date.
+Deduplication :: Finding and removing repeated records in a dataset.
+Regular expression (regex) :: A pattern language for searching and extracting from text, such as finding every email address.
+String parsing :: Splitting or extracting structured values from raw text.
+Unix timestamp :: The number of seconds since 00:00 UTC on 1 January 1970.
+Time zone handling :: Storing times in UTC and converting them for display, which avoids errors from offsets and daylight saving.
+Data wrangling :: Cleaning, reshaping and combining raw data into a form ready for analysis (also called data munging).
+ETL (extract, transform, load) :: A pipeline that pulls data from sources, transforms it, then loads it into a target such as a warehouse.
+Matplotlib :: Python's foundational plotting library, offering detailed control over every chart element.
+Seaborn :: A statistical plotting library built on Matplotlib with attractive defaults.
+Plotly :: A library for interactive charts in Python and JavaScript.
+Tableau :: A commercial business-intelligence tool for building visual dashboards, often with little or no code.
+Power BI :: Microsoft's business-intelligence tool for reports and dashboards.
+Streamlit :: A Python framework that turns data scripts into interactive web apps with little code.
+Bar chart :: Compares values across categories using the length of bars.
+Line chart :: Shows how a value changes over an ordered dimension, usually time.
+Histogram :: Shows the distribution of a numeric variable by counting values in bins.
+Box plot :: Shows the median, quartiles and potential outliers of a distribution.
+Violin plot :: A box plot combined with a smoothed density curve, showing the full shape of a distribution.
+Scatter plot :: Plots two numeric variables as points, revealing relationships, clusters and outliers.
+Heatmap :: A grid in which color encodes value, often used to show a correlation matrix.
+Pie chart :: Shows the parts of a whole as slices. It becomes hard to read with more than a few categories.
+Pair plot :: A grid of scatter plots for every pair of variables, with distributions on the diagonal.
+Choropleth map :: A map whose regions are shaded according to the value of a variable.
+Data-ink ratio :: Edward Tufte's principle that most ink in a chart should present data, not decoration.
+Truncated axis :: A chart axis that does not start at zero, which can exaggerate differences, especially in bar charts.
+Git :: A distributed version control system that tracks changes to code and supports collaboration.
+Git commit :: A saved snapshot of changes in a repository's history.
+Git branch :: An independent line of development that can later be merged back.
+Pull request :: A proposal to merge changes from one branch into another, usually with code review.
+GitHub :: A web platform that hosts Git repositories and adds collaboration features such as pull requests and issues.
+Command line :: A text interface for running programs and managing files, such as Bash or PowerShell.
+Kaggle :: A platform for data science competitions, public datasets and shared notebooks.
+Hugging Face Hub :: A platform for sharing and downloading ML models, datasets and demo apps.
+scikit-learn :: The standard Python library for classical ML, with a consistent fit, predict and transform API.
+Google Sheets QUERY and Excel XLOOKUP :: Spreadsheet functions that bring SQL-like filtering and key-based lookups to non-programmers.
+Polars :: A fast DataFrame library written in Rust, with lazy query optimization and multithreaded execution.

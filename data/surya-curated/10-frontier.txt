@@ -1,0 +1,101 @@
+# Level 10 · Frontier Topics (2023–2026)
+Reasoning model :: An LLM trained to think through long intermediate reasoning before it answers, trading time for accuracy.
+OpenAI o1 :: OpenAI's September 2024 model, which popularized reasoning through extended hidden chains of thought.
+DeepSeek-R1 :: A January 2025 open-weight reasoning model from China that drew attention for strong performance at a reported low cost.
+Extended thinking :: A mode in which a model spends a budget of tokens reasoning before it produces a final response.
+Test-time compute :: Improving answers by spending more computation at inference, such as longer reasoning or more samples.
+Chain-of-thought faithfulness :: Whether a model's written reasoning truly reflects what caused its answer. Research shows it often does not fully.
+Chain-of-thought monitoring :: Reading a model's reasoning to detect misbehavior, an oversight method that depends on the reasoning remaining legible.
+Self-consistency :: Sampling multiple reasoning paths and taking the most common answer.
+Tree of Thoughts :: A prompting framework that explores and evaluates multiple reasoning branches.
+Reward hacking :: A model finds a way to get high reward while failing at what was actually intended.
+Verifiable reward :: Using automatic checks, such as math answers or unit tests, as the reward for reinforcement learning.
+AI agent :: A system in which a model pursues a goal by planning, using tools and acting over multiple steps.
+Agentic loop :: The repeating cycle of a model choosing an action, a tool running, and the result being fed back.
+ReAct pattern :: An agent pattern that interleaves reasoning steps with actions and observations.
+Model Context Protocol (MCP) :: An open standard from Anthropic, introduced in November 2024, for connecting AI applications to tools and data.
+Agent2Agent (A2A) protocol :: An open protocol introduced by Google in 2025 for communication between AI agents.
+Multi-agent system :: Several AI agents work together, often with an orchestrator delegating to specialized subagents.
+Orchestrator-worker pattern :: A lead agent breaks down a task, delegates pieces to workers and combines their results.
+Computer use :: A capability in which a model operates a computer by viewing screenshots and issuing mouse and keyboard actions.
+Coding agent :: An agent that reads a codebase, edits files and runs tests and commands to complete software tasks.
+Vibe coding :: A term coined by Andrej Karpathy in 2025 for building software by directing AI, with little reading of the code.
+Deep research agent :: An agent that searches many sources over an extended period and synthesizes a cited report.
+Context engineering :: Designing everything a model sees, such as instructions, retrieved data, tools and history, not merely the prompt.
+Agent memory :: Mechanisms that let an agent store information and recall it across steps or sessions.
+Context compaction :: Summarizing older conversation history so that a long-running agent stays inside its context window.
+Agent harness :: The software around a model that runs its tools, manages context and enforces permissions.
+Agent sandbox :: An isolated environment that limits what an agent's actions can affect.
+Tool poisoning :: Malicious instructions hidden in tool descriptions or outputs, intended to manipulate an agent.
+Lethal trifecta :: Simon Willison's term for a dangerous mix in agents: private data access, untrusted content and external communication.
+METR time horizon :: METR's measure of how long a task AI agents can complete, which it has found growing rapidly.
+Agentic RAG :: An agent decides what to retrieve and when, refining its searches across several steps.
+GraphRAG :: Retrieval over a knowledge graph built from documents, which helps answer questions that span many sources.
+HyDE :: Hypothetical Document Embeddings: retrieve using an embedding of a generated answer, not of the question alone.
+Contextual retrieval :: Adding chunk-specific context before embedding, a technique Anthropic described in 2024 for reducing retrieval failures.
+Late chunking :: Embedding a whole document first, then splitting token embeddings into chunks, so chunks retain surrounding context.
+ColBERT :: A late-interaction retrieval model that compares individual token embeddings from the query and document.
+Multimodal RAG :: Retrieval across text, images, tables and other kinds of content.
+Mixture of Experts (MoE) :: An architecture that activates only a subset of its specialized subnetworks for each token, reducing compute.
+Small language model (SLM) :: A compact model, such as Microsoft's Phi series, built for lower cost or on-device use.
+Mamba :: A 2023 sequence architecture based on state space models, offering linear-time scaling in sequence length.
+Kolmogorov-Arnold Network (KAN) :: A 2024 architecture with learnable activation functions on edges rather than fixed ones on nodes.
+Speculative decoding :: A small draft model proposes tokens that a larger model verifies, which speeds up generation.
+Diffusion Transformer (DiT) :: A diffusion model that uses a transformer as its denoising network rather than a U-Net.
+Flow matching :: A generative method that trains a model to learn a velocity field that transports noise to data.
+Rectified flow :: A flow method that learns straight paths between noise and data, allowing fewer sampling steps.
+Consistency model :: A 2023 generative model trained to map noise directly to data, enabling one-step or few-step sampling.
+Sora :: OpenAI's text-to-video model, announced in February 2024.
+Veo :: Google DeepMind's family of video generation models.
+Gaussian splatting :: A 2023 3D scene rendering method representing scenes as many 3D Gaussians, enabling real-time rendering.
+Neural radiance field (NeRF) :: A neural representation of a 3D scene, trained from images, for rendering new views.
+World model :: A model that learns to simulate an environment, so that an agent can predict and plan.
+Genie :: Google DeepMind's 2024 generative model that creates playable, interactive environments from prompts or images.
+JEPA :: Joint Embedding Predictive Architecture: Yann LeCun's approach of predicting abstract representations rather than raw inputs.
+AlphaFold :: DeepMind's protein structure prediction system. Its developers shared the 2024 Nobel Prize in Chemistry.
+AlphaProof and AlphaGeometry :: DeepMind systems that together reached silver-medal level on 2024 International Math Olympiad problems.
+IMO gold-level AI (2025) :: Experimental systems from OpenAI and Google DeepMind reached gold-medal-level scores on 2025 Olympiad problems.
+Neuro-symbolic AI :: Combining neural networks with symbolic logic or formal reasoning.
+Physical AI :: AI systems that act in the physical world, such as robots and autonomous vehicles.
+Diffusion Policy :: A robot learning method that uses a diffusion model to generate sequences of actions.
+Imitation learning :: Training a policy from demonstrations of a task, rather than from reward alone.
+Sim-to-real transfer :: Training a robot in simulation and carrying the learned behavior over to the real world.
+Mechanistic interpretability :: Reverse-engineering neural networks to understand the internal computations behind their behavior.
+Feature (interpretability) :: A direction or pattern in a network's activations that corresponds to a human-understandable concept.
+Superposition :: Networks represent more features than they have dimensions by overlapping them.
+Polysemantic neuron :: A single neuron that responds to several unrelated concepts.
+Sparse autoencoder (SAE) :: Decomposes model activations into a larger set of sparse features that are easier to interpret.
+Golden Gate Claude :: A 2024 Anthropic demo that amplified a Golden Gate Bridge feature, which made the model obsessed with the bridge.
+Activation steering :: Changing model behavior by adding a chosen vector to its internal activations.
+Circuit tracing :: Mapping how features interact in steps inside a model to produce an output.
+Linear probe :: A simple classifier trained on a model's activations to test whether they contain certain information.
+AI alignment :: Ensuring that AI systems reliably pursue the goals and values their designers and users intend.
+Outer vs inner alignment :: Outer alignment is specifying the right objective; inner alignment is getting a model to actually pursue it.
+Goal misgeneralization :: A model performs competently in new settings while pursuing a different goal than the one intended.
+Deceptive alignment :: A hypothetical failure in which a model behaves well in training while hiding different goals.
+Sleeper agents :: A 2024 Anthropic study showing that deliberately planted deceptive behaviors can survive safety training.
+Alignment faking :: A 2024 study in which a model selectively complied in training to avoid having its behavior modified.
+Emergent misalignment :: A 2025 finding that narrow fine-tuning, such as on insecure code, can produce broad misaligned behavior.
+Sandbagging :: A model deliberately underperforming on an evaluation.
+Evaluation awareness :: A model recognizing that it is being tested, which can make test results less reliable.
+Scheming :: An AI covertly pursuing misaligned goals while hiding its real capabilities or intentions.
+Many-shot jailbreaking :: A long-context attack that fills a prompt with many fake harmful dialogue examples.
+Constitutional classifiers :: Safeguards trained on written rules that screen inputs and outputs to resist jailbreaks.
+Deliberative alignment :: OpenAI's 2024 technique of training reasoning models to reason explicitly about safety specifications before responding.
+AI control :: Techniques for safely using powerful models even if they may be untrustworthy, through monitoring and restrictions.
+Responsible Scaling Policy (RSP) :: Anthropic's framework that ties required safety measures to model capability thresholds (AI Safety Levels).
+Frontier AI :: The most capable general-purpose models at the leading edge of the field.
+EU AI Act :: The EU's risk-based AI law, which entered into force in August 2024 and applies in stages.
+Dangerous capability evaluations :: Tests of whether a model could materially assist with severe harms, such as in cybersecurity or biology.
+Unlearning :: Removing specific knowledge or the influence of particular data from a trained model.
+C2PA and watermarking :: Provenance methods that attach or embed information identifying AI-generated content.
+Automated AI research :: Using AI systems to speed up AI research itself; a closely watched capability and risk.
+Recursive self-improvement :: A hypothetical process in which AI repeatedly improves its own design, accelerating progress.
+Data wall :: The concern that public, high-quality training data is running short, which pushes attention to synthetic data and reasoning.
+Compute cluster scale :: Frontier training now uses clusters of hundreds of thousands of GPUs, making power a limiting constraint.
+High-bandwidth memory (HBM) :: Stacked memory placed close to AI accelerators, and a major supply bottleneck.
+NVIDIA Blackwell :: NVIDIA's AI accelerator architecture, announced in 2024 as the successor to Hopper.
+ARC-AGI :: François Chollet's benchmark of novel visual puzzles, intended to test adaptable reasoning rather than memorized skill.
+SWE-bench :: A benchmark that tests models on resolving real GitHub issues.
+Humanity's Last Exam :: A 2025 benchmark of very hard expert-written questions across many academic fields.
+GDPval :: An OpenAI evaluation from 2025 that measures model performance on real-world professional work tasks.

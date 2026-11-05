@@ -1,0 +1,101 @@
+# Level 8 · Production ML, Big Data & Deployment
+MLOps :: Practices for reliably building, deploying, monitoring and maintaining ML systems in production.
+ML lifecycle :: The cycle of framing the problem, collecting data, training, deploying, monitoring and retraining.
+Data pipeline :: An automated series of steps that moves and transforms data from sources to destinations.
+ELT :: Extract, load, then transform inside the warehouse, reversing the last two steps of traditional ETL.
+Batch processing :: Processing large groups of data on a schedule.
+Stream processing :: Processing data continuously as it arrives.
+Data warehouse :: A central store of structured, cleaned data optimized for analytical queries, such as Snowflake or BigQuery.
+Data lake :: Low-cost storage for large amounts of raw data in many formats.
+Data lakehouse :: An architecture adding warehouse features, such as transactions and schema management, to a data lake.
+Data mart :: A focused subset of a warehouse, serving one team or business area.
+Star schema :: A warehouse design in which a central fact table links to surrounding dimension tables.
+Fact vs dimension table :: Fact tables store measurable events; dimension tables store descriptive attributes.
+Slowly changing dimension :: Techniques for tracking changes to dimension attributes over time.
+Apache Hadoop :: An open-source framework for distributed storage (HDFS) and batch processing on commodity clusters.
+MapReduce :: A programming model that processes data in parallel by mapping to key-value pairs and then reducing them by key.
+Apache Spark :: A distributed engine for large-scale data processing that runs largely in memory.
+Spark lazy evaluation :: Spark transformations build a plan that runs only when an action requests a result.
+Apache Kafka :: A distributed event streaming platform with durable, partitioned logs of messages.
+Apache Flink :: A framework for stateful stream processing with event-time support.
+Apache Airflow :: A workflow orchestrator that defines pipelines as DAGs in Python.
+DAG (directed acyclic graph) :: A graph of steps with one-way dependencies and no cycles, used to define pipelines.
+dbt (data build tool) :: A tool for writing tested, version-controlled SQL transformations inside a warehouse.
+Delta Lake and Apache Iceberg :: Open table formats that bring ACID transactions and time travel to files in a data lake.
+Partitioning (data) :: Splitting a large table by a key, such as date, so queries scan less data.
+Sharding :: Splitting a database across multiple servers by key, which scales capacity.
+Replication :: Keeping copies of data on several machines for availability and fault tolerance.
+CAP theorem :: During a network partition, a distributed data system must choose between consistency and availability.
+Eventual consistency :: Replicas may temporarily differ, but they converge if no new updates arrive.
+Idempotency :: Running an operation multiple times has the same effect as running it once, which makes pipeline retries safe.
+Data lineage :: Tracking where data came from and how it was transformed.
+Data catalog :: A searchable inventory of an organization's data assets and their metadata.
+Data governance :: The policies and roles that control how data is managed, secured and used.
+Data contract :: An agreement between data producers and consumers about schema and quality.
+Data quality checks :: Automated tests for issues such as nulls, duplicates, invalid ranges and freshness.
+Data observability :: Monitoring the health of data, including freshness, volume and schema changes.
+Backfill :: Rerunning a pipeline over past periods to fill gaps or apply new logic.
+Change data capture (CDC) :: Tracking row-level changes in a database and streaming them to other systems.
+Cloud computing :: Renting computing resources on demand over the internet, rather than owning them.
+AWS, Azure and Google Cloud :: The three largest public cloud platforms.
+Object storage :: Scalable storage of files as objects in buckets, such as Amazon S3.
+Serverless :: Running code without managing servers, with the provider handling scaling and billing per use.
+Docker :: A tool that packages an application and its dependencies into a portable container.
+Container vs virtual machine :: Containers share the host's operating system and are lightweight; VMs each include a full guest operating system.
+Kubernetes :: A system that automates the deployment, scaling and management of containers.
+Infrastructure as code :: Defining infrastructure in version-controlled configuration files, using tools such as Terraform.
+CI/CD :: Continuous integration and delivery: automatically testing and releasing changes.
+Continuous training (CT) :: Automatically retraining models when new data arrives or performance drops.
+Model registry :: A central store of model versions, along with their metadata and approval stage.
+Experiment tracking :: Recording the parameters, code, data and metrics of each training run, using tools such as MLflow or Weights & Biases.
+MLflow :: An open-source platform for experiment tracking, model packaging and a model registry.
+DVC (Data Version Control) :: A tool that versions datasets and models alongside Git.
+Reproducibility :: Being able to rerun an experiment and get the same result, which requires fixed code, data, environment and seeds.
+Feature store :: A central system that serves consistent features to both training and production.
+Training-serving skew :: A mismatch between how features are computed in training and in production, which hurts performance.
+Point-in-time correctness :: Ensuring training features use only values known at that moment, which prevents leakage.
+Batch inference :: Generating predictions in bulk on a schedule and storing them for later use.
+Online inference :: Generating predictions on demand, in real time, usually through an API.
+Edge deployment :: Running models on local devices such as phones or sensors, which reduces latency and can improve privacy.
+Model serving :: Making a trained model available to answer prediction requests.
+ONNX :: An open format for exchanging models between frameworks and runtimes.
+FastAPI :: A Python web framework commonly used to wrap models in APIs.
+Latency :: The time taken to return a response, often reported as percentiles such as p95.
+Throughput :: The number of requests or predictions a system handles per unit of time.
+Autoscaling :: Automatically adding or removing resources as demand changes.
+Shadow deployment :: Running a new model on live traffic without showing its output to users, to compare it safely.
+Canary deployment :: Releasing a new model to a small share of users before a wider rollout.
+Blue-green deployment :: Running old and new versions side by side, then switching traffic so rollback is fast.
+Rollback :: Quickly reverting to a previous model version when a new release misbehaves.
+Model monitoring :: Tracking a live model's inputs, outputs and performance to catch problems.
+Data drift :: A change in the distribution of input data over time.
+Concept drift :: A change in the relationship between inputs and the target over time.
+Label shift :: A change in how common each class is, while the class-conditional inputs stay the same.
+Population Stability Index (PSI) :: A metric that quantifies how far a distribution has shifted from a baseline.
+Kolmogorov-Smirnov test :: A statistical test that compares two distributions and is often used to detect drift.
+Feedback loop :: A model's predictions influence its future training data, which can reinforce errors or bias.
+Model decay :: The gradual decline of a model's performance after deployment.
+Model card :: A short document describing a model's intended use, performance and limitations.
+Technical debt in ML :: Hidden long-term maintenance costs of ML systems, such as tangled data dependencies.
+Quantization :: Reducing the numerical precision of weights, such as from 32-bit to 8-bit, to save memory and speed up inference.
+Model pruning :: Removing unimportant weights or neurons to shrink a network.
+Algorithmic fairness :: Evaluating and reducing unjust differences in a system's outcomes across groups.
+Demographic parity :: A fairness criterion requiring similar positive prediction rates across groups.
+Equalized odds :: A fairness criterion requiring similar true positive and false positive rates across groups.
+Proxy variable :: A feature that stands in for a sensitive attribute, such as ZIP code for race.
+Personally identifiable information (PII) :: Data that can identify a specific person, such as a name or Social Security number.
+Anonymization vs pseudonymization :: Anonymization irreversibly removes identity; pseudonymization replaces identifiers with codes that can be linked back.
+GDPR :: The EU's data protection regulation, which covers consent, access and erasure rights.
+Differential privacy :: A mathematical guarantee that limits how much any one person's data can affect a result.
+Federated learning :: Training across many devices or organizations without moving raw data to a central server.
+Homomorphic encryption :: Allows computation on encrypted data without decrypting it first.
+Synthetic data :: Artificially generated data that imitates the properties of real data.
+Adversarial example :: An input changed in a small way, often invisibly, that causes a model to make a mistake.
+Data poisoning :: Tampering with training data to corrupt a model's behavior.
+Model inversion attack :: Reconstructing sensitive training data from a model's outputs.
+Membership inference attack :: Determining whether a specific record was in a model's training data.
+Model extraction attack :: Copying a model's behavior by querying it repeatedly and training on its answers.
+Human-in-the-loop :: A system that uses human review for training data or for decisions.
+Data labeling :: Annotating raw data with target labels, often through tools or crowdworkers.
+Weak supervision :: Using noisy programmatic rules or other imperfect sources to label data at scale.
+Rule of thumb on ML effort :: Most project time typically goes to data and infrastructure, with only a small part spent on model code.

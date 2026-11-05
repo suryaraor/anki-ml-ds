@@ -1,0 +1,101 @@
+# Level 7 · Vision, Language & Sequence Models
+Convolutional neural network (CNN) :: A network that uses convolution layers to learn spatial patterns, especially in images.
+Convolution :: Sliding a small filter across an input and computing weighted sums, which detects local patterns.
+Filter (kernel) :: A small matrix of learned weights applied across an image to detect a feature such as an edge.
+Feature map :: The output of applying a filter, showing where that feature appears in the input.
+Stride :: How many pixels a filter moves at each step.
+Padding :: Adding border values around an input, which controls the output size and keeps edge information.
+Pooling layer :: Downsamples feature maps by summarizing small regions, for example by taking the maximum.
+Max pooling :: A pooling method that keeps the largest value in each region.
+Global average pooling :: Averages each entire feature map to one number, often replacing dense layers before the output.
+Receptive field :: The region of the input that influences a given neuron's output.
+1×1 convolution :: A convolution that changes the channel count and mixes channels without changing spatial size.
+Translation equivariance :: Shifting the input shifts the feature map in the same way, a key property of convolution.
+Image channels :: The separate layers of values per pixel, such as red, green and blue.
+LeNet-5 :: Yann LeCun's early CNN from the 1990s, used for handwritten digit recognition.
+MNIST :: A classic dataset of 70,000 images of handwritten digits.
+ImageNet :: A large labeled image dataset whose annual challenge drove major advances in computer vision.
+VGGNet :: A very deep CNN built from stacks of small 3×3 filters.
+Inception (GoogLeNet) :: A CNN whose modules run filters of several sizes in parallel.
+ResNet :: A CNN with residual connections that made networks with over 100 layers trainable.
+MobileNet :: An efficient CNN for mobile devices that uses depthwise separable convolutions.
+Depthwise separable convolution :: Splits a convolution into per-channel spatial filtering followed by 1×1 channel mixing, which greatly reduces computation.
+EfficientNet :: A CNN family that scales depth, width and resolution together with a single compound coefficient.
+ConvNeXt :: A modern pure CNN redesigned using ideas from vision transformers.
+Vision Transformer (ViT) :: Splits an image into patches and processes them as a sequence with a transformer.
+Image classification :: Assigning one label to a whole image.
+Object detection :: Locating objects in an image with bounding boxes and assigning each a class.
+Bounding box :: A rectangle that marks an object's location in an image.
+Intersection over union (IoU) :: The overlap area of two boxes divided by their combined area.
+Non-maximum suppression (NMS) :: Removes overlapping duplicate detections, keeping the highest-scoring box.
+Mean average precision (mAP) :: The standard object detection metric: average precision across classes, and often across IoU thresholds.
+Faster R-CNN :: A two-stage detector that proposes candidate regions, then classifies and refines them.
+YOLO :: You Only Look Once: a fast, single-stage object detector that predicts boxes and classes in one pass.
+Semantic segmentation :: Assigning a class label to every pixel in an image.
+Instance segmentation :: Separating each object at the pixel level, even when objects share a class.
+U-Net :: An encoder-decoder network with skip connections, originally for biomedical image segmentation.
+Mask R-CNN :: Extends Faster R-CNN with a branch that predicts a pixel mask for each object.
+Segment Anything Model (SAM) :: Meta's promptable model that segments objects from clicks, boxes or other prompts.
+Optical character recognition (OCR) :: Converting images of text into machine-readable text.
+Pose estimation :: Locating body joints or key points in images or video.
+Text preprocessing :: Preparing raw text through steps such as lowercasing, removing noise and splitting into tokens.
+Tokenization :: Splitting text into units such as words, subwords or characters.
+Stop words :: Very common words such as "the" or "is," often removed in classical NLP.
+Stemming :: Crudely chopping word endings to reach a root form: "running" becomes "run," "studies" becomes "studi."
+Lemmatization :: Reducing a word to its dictionary form using vocabulary and grammar: "better" becomes "good."
+Part-of-speech tagging :: Labeling each word with its grammatical role, such as noun or verb.
+Named entity recognition (NER) :: Finding and classifying names of people, organizations, places and dates in text.
+Dependency parsing :: Identifying the grammatical relationships between words in a sentence.
+Sentiment analysis :: Determining the emotional tone of text, such as positive or negative.
+N-gram :: A contiguous sequence of n items from text, such as a two-word pair (bigram).
+Bag of words :: Represents a document by its word counts, ignoring order.
+TF-IDF :: Weights a word by its frequency in a document, reduced by how common it is across all documents.
+Topic modeling :: Discovering the themes that run through a collection of documents.
+Latent Dirichlet Allocation :: A topic model that treats documents as mixtures of topics and topics as mixtures of words.
+Word embedding :: A dense vector representing a word, so that words with similar meanings lie close together.
+Distributional hypothesis :: Words that occur in similar contexts tend to have similar meanings.
+Word2Vec :: Learns word embeddings by predicting words from their context or context from words.
+Skip-gram vs CBOW :: Skip-gram predicts context words from a target word; CBOW predicts a target word from its context.
+Negative sampling :: Trains embeddings by distinguishing true word-context pairs from random ones, rather than scoring the whole vocabulary.
+GloVe :: Learns word embeddings from global word co-occurrence statistics.
+FastText :: Builds word embeddings from character n-grams, so it can handle unseen words.
+Cosine similarity :: The cosine of the angle between two vectors, measuring similarity regardless of their length.
+Word analogy (king − man + woman ≈ queen) :: A famous demonstration that embedding arithmetic can capture some relationships between words.
+Sequence model :: A model for ordered data such as text, audio or time series.
+Recurrent neural network (RNN) :: Processes a sequence step by step, passing a hidden state forward as memory.
+Hidden state :: The internal vector an RNN carries across time steps, summarizing what it has seen.
+Backpropagation through time (BPTT) :: Training an RNN by unrolling it across time steps and backpropagating through them.
+Long short-term memory (LSTM) :: An RNN with a cell state and gates that control what is stored, which helps it learn long-range dependencies.
+LSTM gates :: The forget gate discards information, the input gate adds it, and the output gate decides what to expose.
+Gated recurrent unit (GRU) :: A simplified LSTM with update and reset gates and fewer parameters.
+Bidirectional RNN :: Processes a sequence forward and backward, so each position has context from both sides.
+Sequence-to-sequence (seq2seq) :: An encoder reads an input sequence and a decoder generates an output sequence.
+Encoder-decoder :: An architecture in which one network compresses the input and another generates the output from that representation.
+Teacher forcing :: Feeding the true previous token to the decoder during training, instead of its own prediction.
+Beam search :: A decoding strategy that keeps the top k candidate sequences at each step.
+Greedy decoding :: Always choosing the single most likely next token.
+Attention mechanism :: Lets a model weight the most relevant parts of the input when producing each output.
+Bahdanau attention :: The influential 2014 mechanism that added attention to neural machine translation.
+Machine translation :: Automatically translating text from one language to another.
+BLEU score :: Measures translation quality through n-gram overlap with reference translations.
+ROUGE :: A set of metrics that measure summary quality through overlap with reference summaries.
+Extractive vs abstractive summarization :: Extractive selects existing sentences; abstractive writes new ones.
+Question answering (QA) :: A task in which a model finds or generates the answer to a question.
+Text classification :: Assigning categories to text, such as tagging support tickets by topic.
+Language model :: A model that estimates the probability of sequences of words or tokens.
+Perplexity :: A language model metric reflecting how surprised the model is by text; lower is better.
+ELMo :: An early contextual embedding from bidirectional LSTMs, giving a word different vectors in different contexts.
+Spectrogram :: A visual representation of how the frequencies in a sound change over time.
+Mel spectrogram :: A spectrogram scaled to approximate human hearing, a common input for speech models.
+Text-to-speech (TTS) :: Generating spoken audio from written text.
+Whisper :: OpenAI's open-source speech recognition model, released in 2022.
+WaveNet :: DeepMind's generative model of raw audio that greatly improved synthetic speech.
+Speaker diarization :: Determining who spoke when in an audio recording.
+Temporal Convolutional Network (TCN) :: Uses dilated causal convolutions for sequence modeling instead of recurrence.
+Graph neural network (GNN) :: A network that learns on graph-structured data by passing messages between connected nodes.
+Graph convolutional network (GCN) :: A GNN that updates each node by aggregating features from its neighbors.
+Graph attention network (GAT) :: A GNN that learns attention weights for how much each neighbor matters.
+Knowledge graph :: A network of entities connected by typed relationships.
+Two-tower model :: A recommender with separate user and item networks whose embeddings are compared at retrieval time.
+Learning to rank :: Training models to produce a good ordering of results, as in search.
+Multimodal learning :: Combining different kinds of data, such as text, images and audio, in one model.

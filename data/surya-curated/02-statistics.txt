@@ -1,0 +1,101 @@
+# Level 2 · Statistics & Probability
+Descriptive statistics :: Methods that summarize and describe the main features of a dataset (center, spread, shape).
+Inferential statistics :: Methods that draw conclusions about a population from a sample, with quantified uncertainty.
+Mean :: The arithmetic average: the sum of values divided by the number of values. Sensitive to outliers.
+Median :: The middle value when data is sorted; robust to outliers.
+Mode :: The most frequently occurring value in a dataset.
+Range :: The difference between the maximum and minimum values.
+Variance :: The average squared deviation from the mean; measures spread.
+Standard deviation :: The square root of the variance; spread expressed in the original units of the data.
+Quartiles :: Values that split sorted data into four equal parts: Q1 (25th percentile), Q2 (median) and Q3 (75th percentile).
+Interquartile range (IQR) :: Q3 − Q1: the spread of the middle 50% of the data; robust to outliers.
+Percentile :: The value below which a given percentage of observations fall.
+Five-number summary :: Minimum, Q1, median, Q3 and maximum; the basis of a box plot.
+1.5 × IQR rule :: A common outlier rule: points below Q1 − 1.5·IQR or above Q3 + 1.5·IQR are flagged as outliers.
+Skewness :: A measure of the asymmetry of a distribution. Positive (right) skew has a long right tail.
+Kurtosis :: A measure of how heavy a distribution's tails are compared with a normal distribution.
+Probability :: A number from 0 to 1 measuring how likely an event is to occur.
+Sample space :: The set of all possible outcomes of a random experiment.
+Event :: A set of outcomes from the sample space to which a probability is assigned.
+Independent events :: Events where the occurrence of one does not change the probability of the other: P(A and B) = P(A)·P(B).
+Mutually exclusive events :: Events that cannot happen at the same time: P(A and B) = 0.
+Conditional probability :: The probability of A given that B occurred: P(A|B) = P(A and B) / P(B).
+Joint probability :: The probability that two or more events occur together, P(A and B).
+Marginal probability :: The probability of a single event regardless of other variables, obtained by summing or integrating over them.
+Bayes' theorem :: P(A|B) = P(B|A)·P(A) / P(B). It updates a prior belief with evidence to give a posterior.
+Prior :: In Bayesian statistics, the belief about a parameter before seeing the data.
+Posterior :: The updated belief about a parameter after combining the prior with observed data via Bayes' theorem.
+Likelihood :: The probability (or density) of the observed data as a function of the model parameters.
+Random variable :: A variable whose value is a numerical outcome of a random process.
+Probability distribution :: A function describing how probability is spread over the possible values of a random variable.
+Probability mass function (PMF) :: Gives the probability of each value of a discrete random variable.
+Probability density function (PDF) :: Describes the relative likelihood of a continuous random variable; probabilities are areas under the curve.
+Cumulative distribution function (CDF) :: F(x) = P(X ≤ x): the probability that a random variable is at most x.
+Expected value :: The probability-weighted average of all possible values of a random variable; its long-run mean.
+Normal distribution :: The symmetric bell-shaped distribution defined by its mean μ and standard deviation σ (also called Gaussian).
+Standard normal distribution :: A normal distribution with mean 0 and standard deviation 1.
+68-95-99.7 rule :: For a normal distribution, about 68%, 95% and 99.7% of values lie within 1, 2 and 3 standard deviations of the mean.
+Z-score :: (x − μ) / σ: how many standard deviations a value is from the mean.
+Uniform distribution :: A distribution in which all outcomes in a range are equally likely.
+Bernoulli distribution :: The distribution of a single trial with two outcomes: success with probability p, failure with 1 − p.
+Binomial distribution :: The number of successes in n independent Bernoulli trials, each with success probability p.
+Poisson distribution :: Models the count of events in a fixed interval when events occur independently at a constant average rate λ.
+Exponential distribution :: Models the waiting time between events in a Poisson process; it is memoryless.
+Beta distribution :: A distribution on [0, 1], often used as a prior for probabilities (it is conjugate to the binomial).
+Student's t-distribution :: A bell-shaped distribution with heavier tails than the normal, used when the sample is small and σ is unknown.
+Chi-square distribution :: The distribution of a sum of squared standard normal variables; used in goodness-of-fit and independence tests.
+Log-normal distribution :: A distribution whose logarithm is normally distributed; right-skewed, common for incomes and prices.
+Power law :: A relationship where one quantity varies as a power of another; it produces heavy-tailed "long tail" distributions.
+Law of large numbers :: As the sample size grows, the sample mean converges to the population (expected) mean.
+Central limit theorem (CLT) :: The distribution of the sample mean of many independent samples approaches a normal distribution, whatever the population's shape (given finite variance).
+Sampling distribution :: The probability distribution of a statistic (like the mean) over many repeated samples.
+Standard error :: The standard deviation of a sampling distribution; for the mean it is σ / √n.
+Random sampling :: Selecting a sample so that every member of the population has a known, usually equal, chance of being chosen.
+Stratified sampling :: Dividing the population into subgroups (strata) and sampling from each, to keep their proportions.
+Cluster sampling :: Randomly selecting whole groups (clusters) and including all or some members of each.
+Systematic sampling :: Selecting every k-th member from an ordered list after a random start.
+Convenience sampling :: Sampling whoever is easiest to reach; quick but prone to bias.
+Sampling bias :: A biased sample that does not represent the population because some members were more likely to be chosen.
+Selection bias :: Distortion that arises when the way subjects are selected makes the sample unrepresentative.
+Survivorship bias :: Drawing conclusions only from the cases that "survived" a selection process, ignoring the ones that failed. :: Studying only successful startups to learn what makes startups succeed.
+Confounding variable :: A variable that influences both the supposed cause and the effect, creating a spurious association.
+Simpson's paradox :: A trend that appears in several groups reverses or disappears when the groups are combined.
+Point estimate :: A single value used to estimate a population parameter, such as the sample mean.
+Confidence interval :: A range computed from sample data that, under repeated sampling, would contain the true parameter at a stated rate (e.g., 95%).
+Margin of error :: Half the width of a confidence interval; the expected maximum difference between the estimate and the true value at that confidence level.
+Null hypothesis (H₀) :: The default claim of no effect or no difference, which a test tries to find evidence against.
+Alternative hypothesis (H₁) :: The claim that there is an effect or difference; supported if the null is rejected.
+P-value :: The probability of seeing results at least as extreme as those observed, assuming the null hypothesis is true.
+Significance level (α) :: The threshold for rejecting the null hypothesis, often 0.05; also the Type I error rate.
+Type I error :: Rejecting a true null hypothesis: a false positive.
+Type II error :: Failing to reject a false null hypothesis: a false negative.
+Statistical power :: The probability of correctly rejecting a false null hypothesis (1 − β). It grows with sample size and effect size.
+Effect size :: A measure of the magnitude of a difference or relationship, independent of sample size (e.g., Cohen's d).
+One-tailed vs two-tailed test :: A one-tailed test checks for an effect in one direction; a two-tailed test checks both directions.
+T-test :: A test comparing means: one sample vs a value, two independent groups, or paired measurements.
+Z-test :: A test of means or proportions when the population variance is known or the sample is large.
+Chi-square test of independence :: Tests whether two categorical variables are associated, using a contingency table.
+ANOVA (analysis of variance) :: Tests whether the means of three or more groups differ by comparing between-group and within-group variance.
+Mann-Whitney U test :: A non-parametric test comparing two independent groups, based on ranks.
+Parametric vs non-parametric tests :: Parametric tests assume a distribution (often normal); non-parametric tests make fewer assumptions and often use ranks.
+Multiple comparisons problem :: Running many tests inflates the chance of false positives; corrections such as Bonferroni address it.
+Bonferroni correction :: Divides α by the number of tests to control the family-wise error rate.
+False discovery rate (FDR) :: The expected share of false positives among rejected hypotheses; controlled by the Benjamini-Hochberg procedure.
+P-hacking :: Manipulating analyses (trying many tests, removing data, stopping early) until a significant p-value appears.
+A/B test :: A randomized controlled experiment comparing two variants (A and B) to see which performs better on a metric.
+Randomized controlled trial (RCT) :: An experiment where subjects are randomly assigned to treatment or control, so causal effects can be estimated.
+Pearson correlation coefficient (r) :: Measures the linear relationship between two variables, from −1 to +1.
+Spearman rank correlation :: A correlation based on ranks; measures monotonic (not just linear) relationships and is robust to outliers.
+Covariance :: A measure of how two variables vary together; its sign shows direction, but its scale depends on the units.
+Coefficient of determination (R²) :: The proportion of variance in the target explained by the model.
+Residual :: The difference between an observed value and the value predicted by a model.
+Maximum likelihood estimation (MLE) :: Estimating parameters by choosing the values that make the observed data most probable.
+Maximum a posteriori (MAP) estimation :: Choosing the parameter values that maximize the posterior: likelihood times prior.
+Bootstrap :: Estimating the uncertainty of a statistic by resampling the data with replacement many times.
+Permutation test :: A non-parametric test that builds the null distribution by randomly shuffling labels.
+Monte Carlo simulation :: Using repeated random sampling to estimate numerical results, such as probabilities or integrals.
+Markov chain :: A random process in which the next state depends only on the current state (the Markov property).
+Markov chain Monte Carlo (MCMC) :: Algorithms (e.g., Metropolis-Hastings, Gibbs sampling) that sample from complex distributions by building a Markov chain.
+Frequentist vs Bayesian :: Frequentists treat parameters as fixed and probability as long-run frequency; Bayesians treat parameters as uncertain and update beliefs with data.
+Entropy (information theory) :: The average uncertainty or information content of a random variable: H = −Σ p log p.
+KL divergence :: Kullback-Leibler divergence: a non-symmetric measure of how one probability distribution differs from a reference distribution.

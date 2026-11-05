@@ -184,6 +184,30 @@ def is_dup(q, seen, fuzzy=False):
                or fuzzy and difflib.SequenceMatcher(None, n, o).ratio() > 0.92 for o in seen)
 
 
+CURATED = ("Surya curated", os.path.join(DATA, "surya-curated"))
+
+
+def read_curated(folder):
+    """Hand-written cards, simple to advanced: one file per level, lines "Front :: Back [:: Example]"."""
+    for fname in sorted(os.listdir(folder)):
+        if not fname.endswith(".txt"):
+            continue
+        level = ""
+        for line in open(os.path.join(folder, fname), encoding="utf8"):
+            line = line.strip()
+            if line.startswith("# Level"):
+                level = line[2:].strip()
+            if not line or line.startswith("#"):
+                continue
+            parts = [p.strip() for p in line.split(" :: ")]
+            if len(parts) < 2:
+                raise SystemExit("%s: bad line: %s" % (fname, line))
+            q = parts[0]
+            yield {"id": "sc-" + hashlib.sha1(norm(q).encode()).hexdigest()[:12], "q": html.escape(q, quote=False),
+                   "a": html.escape(parts[1], quote=False),
+                   "x": html.escape(" :: ".join(parts[2:]), quote=False), "src": level}
+
+
 def main():
     shutil.rmtree(MEDIA, ignore_errors=True)
     os.makedirs(MEDIA)
@@ -209,6 +233,15 @@ def main():
                 deck["cards"].append(c)
                 extra += 1
                 break
+
+    # The curated deck stands alone: it is not de-duplicated against the Anki decks (and they not against it).
+    curated, ids = [], set()
+    for c in read_curated(CURATED[1]):
+        if c["id"] in ids:
+            raise SystemExit("Surya curated: duplicate card: " + c["q"])
+        ids.add(c["id"])
+        curated.append(c)
+    out.insert(0, {"name": CURATED[0], "cards": curated})
 
     # Only ship images that a card actually shows.
     fields = " ".join(c[k] for d in out for c in d["cards"] for k in ("q", "a", "x"))

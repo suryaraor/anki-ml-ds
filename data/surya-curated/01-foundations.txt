@@ -1,0 +1,102 @@
+# Level 1 · Foundations
+# Format: Front :: Back [:: optional example/explanation]
+Data :: Recorded facts or observations (numbers, text, images, sounds) that can be stored and analyzed.
+Information :: Data that has been processed or organized so that it is meaningful and useful.
+Dataset :: A structured collection of related data, usually arranged as rows (records) and columns (attributes).
+Data science :: An interdisciplinary field that uses statistics, programming and domain knowledge to extract insight and value from data.
+Artificial intelligence (AI) :: The field of building computer systems that perform tasks normally requiring human intelligence, such as reasoning, perception, language and decision making.
+Machine learning (ML) :: A subfield of AI in which systems learn patterns from data to make predictions or decisions without being explicitly programmed with rules.
+Deep learning :: A subfield of machine learning that uses neural networks with many layers to learn representations directly from raw data.
+Algorithm :: A finite, step-by-step procedure for solving a problem or performing a computation.
+Model :: A mathematical representation learned from data that maps inputs to outputs (predictions).
+Training :: The process of fitting a model's parameters to data so that it learns a useful mapping.
+Inference :: Using a trained model to make predictions on new, unseen data.
+Prediction :: The output a model produces for a given input, such as a class label or a number.
+Feature :: An individual measurable property or input variable used by a model (also called attribute, predictor or independent variable).
+Label :: The known answer or target value attached to a training example in supervised learning.
+Target variable :: The variable a model is trained to predict (also called the dependent variable, response or outcome).
+Observation :: A single row or record in a dataset, representing one entity or event (also called a sample, instance or example).
+Variable :: A characteristic that can take different values across observations, such as age or price.
+Structured data :: Data organized in a fixed schema such as tables with rows and columns (e.g., spreadsheets, relational databases).
+Unstructured data :: Data without a predefined tabular schema, such as free text, images, audio and video.
+Semi-structured data :: Data with some organizational markers but no rigid schema, such as JSON, XML or log files.
+Quantitative data :: Numerical data that measures quantity, such as height, revenue or temperature.
+Qualitative data :: Descriptive, non-numerical data that captures categories or qualities, such as color or opinion.
+Categorical variable :: A variable whose values are discrete groups or labels, such as country or blood type.
+Numerical variable :: A variable whose values are numbers that can be measured or counted.
+Discrete variable :: A numerical variable that takes countable values, such as the number of children.
+Continuous variable :: A numerical variable that can take any value in a range, such as weight or time.
+Nominal data :: Categorical data with no natural order, such as eye color or city.
+Ordinal data :: Categorical data with a meaningful order but uneven or unknown gaps, such as rating levels (low, medium, high).
+Interval data :: Numerical data with equal intervals but no true zero, such as temperature in Celsius.
+Ratio data :: Numerical data with equal intervals and a true zero, so ratios are meaningful (e.g., weight, income).
+Big data :: Datasets too large, fast or varied for traditional tools, often described by the 3 Vs: volume, velocity and variety.
+The 5 Vs of big data :: Volume, Velocity, Variety, Veracity (trustworthiness) and Value.
+Database :: An organized collection of data stored electronically and managed by a database management system.
+Spreadsheet :: A grid-based application (e.g., Excel, Google Sheets) for storing, calculating and analyzing tabular data.
+Data analysis :: Inspecting, cleaning, transforming and modeling data to discover useful information and support decisions.
+Data analyst :: A role focused on querying, summarizing and visualizing data to answer business questions.
+Data scientist :: A role combining statistics, programming and domain knowledge to build models and extract insight from data.
+Data engineer :: A role that builds and maintains the pipelines and infrastructure that collect, store and move data.
+Machine learning engineer :: A role that builds, deploys and maintains ML models in production systems.
+Descriptive analytics :: Analytics that answers "What happened?" by summarizing historical data.
+Diagnostic analytics :: Analytics that answers "Why did it happen?" by finding causes and relationships.
+Predictive analytics :: Analytics that answers "What is likely to happen?" using statistical or ML models.
+Prescriptive analytics :: Analytics that answers "What should we do?" by recommending actions, often via optimization or simulation.
+Data visualization :: The graphical representation of data (charts, graphs, maps) to reveal patterns and communicate insights.
+Dashboard :: A visual display that consolidates key metrics and charts for at-a-glance monitoring.
+KPI (key performance indicator) :: A measurable value that shows how effectively an organization is achieving a key objective.
+Metric :: A quantitative measure used to track and assess performance or quality.
+Data-driven decision making :: Basing decisions on data analysis and evidence rather than intuition alone.
+Data literacy :: The ability to read, understand, work with, analyze and communicate with data.
+Narrow AI (weak AI) :: AI designed for a specific task, such as image recognition or playing chess. All AI deployed today is narrow in this sense.
+Artificial general intelligence (AGI) :: A hypothetical AI that matches or exceeds human ability across virtually all cognitive tasks.
+Artificial superintelligence (ASI) :: A hypothetical AI whose intelligence vastly surpasses the best human minds in every domain.
+Turing test :: Alan Turing's 1950 test: a machine passes if a human judge cannot reliably tell its conversation apart from a human's.
+Alan Turing :: British mathematician who formalized computation (the Turing machine) and proposed the "imitation game" for machine intelligence.
+Dartmouth Conference (1956) :: The workshop where John McCarthy and colleagues coined the term "artificial intelligence" and launched AI as a field.
+AI winter :: A period of reduced funding and interest in AI after hype failed to meet expectations (notably the mid-1970s and late 1980s).
+Expert system :: A rule-based AI program that encodes human expert knowledge as if-then rules to solve problems in a narrow domain.
+Symbolic AI :: An approach to AI using explicit symbols, logic and rules to represent knowledge (also called GOFAI, "good old-fashioned AI").
+Rule-based system :: A system that makes decisions by applying hand-written if-then rules rather than learning from data.
+Heuristic :: A practical rule of thumb or shortcut that finds a good-enough solution quickly, without guaranteeing the optimal one.
+Automation :: Using technology to perform tasks with minimal human intervention.
+Robotics :: The field of designing and building robots that sense, decide and act in the physical world.
+Computer vision :: The field of AI that enables computers to interpret and understand images and video.
+Natural language processing (NLP) :: The field of AI concerned with understanding, generating and analyzing human language.
+Speech recognition :: Converting spoken audio into text (also called automatic speech recognition, ASR).
+Chatbot :: A program that converses with users in natural language, through text or voice.
+Virtual assistant :: An AI agent such as Siri, Alexa or Google Assistant that performs tasks or answers questions via voice or text.
+Recommendation system :: A system that suggests items (movies, products, songs) to users based on their preferences and behavior.
+Supervised learning :: Learning from labeled examples (input-output pairs) to predict outputs for new inputs.
+Unsupervised learning :: Learning patterns or structure from unlabeled data, such as clusters or lower-dimensional representations.
+Reinforcement learning :: Learning by trial and error: an agent takes actions in an environment and learns from rewards and penalties.
+Classification :: A supervised task that predicts a discrete category, e.g., spam or not spam.
+Regression :: A supervised task that predicts a continuous numeric value, e.g., house price.
+Clustering :: An unsupervised task that groups similar data points together without predefined labels.
+Training set :: The portion of data used to fit a model's parameters.
+Test set :: Held-out data used only at the end to estimate how well a model performs on unseen data.
+Validation set :: Data held out from training and used to tune hyperparameters and select models.
+Accuracy :: The fraction of predictions a model gets right: correct predictions ÷ total predictions.
+Error rate :: The fraction of predictions a model gets wrong (1 − accuracy for classification).
+Bias (in data) :: A systematic skew in data or a process that leads to unfair or inaccurate outcomes.
+Pattern recognition :: Automatically identifying regularities, such as shapes, sequences or trends, in data.
+Data point :: A single observation or value in a dataset.
+Outlier :: A data point that differs markedly from the rest of the data.
+Missing data :: Values that are absent from a dataset, often shown as blank, NULL or NaN.
+Data cleaning :: Detecting and correcting errors, inconsistencies and missing values in data (also called data cleansing).
+Raw data :: Data in its original, unprocessed form as collected from a source.
+Data collection :: Gathering data from sources such as surveys, sensors, logs, APIs or databases.
+Data source :: The origin of data, such as a database, file, API, sensor or website.
+Sample :: A subset of a population selected for analysis.
+Population :: The entire group of individuals or items that a study is interested in.
+Hypothesis :: A testable statement or proposed explanation about a relationship or effect.
+Correlation :: A statistical measure of how strongly two variables move together.
+Causation :: A relationship in which a change in one variable directly produces a change in another.
+"Correlation does not imply causation" :: Two variables moving together does not prove that one causes the other; a confounder or coincidence may explain it. :: Ice cream sales and drownings both rise in summer; heat drives both.
+Trend :: A general direction in which data moves over time, such as upward or downward.
+Average :: A single value summarizing the center of data, usually the arithmetic mean (sum ÷ count).
+Percentage :: A ratio expressed as a fraction of 100.
+Chart :: A visual representation of data, such as a bar, line or pie chart.
+Table :: Data arranged in rows and columns.
+Open data :: Data that anyone can freely access, use and share, often published by governments or research bodies.
