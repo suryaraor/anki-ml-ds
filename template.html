@@ -27,6 +27,7 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 .hint{font-size:12px;color:var(--mut);margin-bottom:20px;text-align:center;padding:0 12px}.hint a{color:var(--mut)}
 #acct{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;min-height:34px}#syncState{color:var(--mut);font-size:12px}
 #notice{width:100%;background:#ccfbf1;color:var(--ink);padding:8px 16px;font-size:13px;text-align:center;line-height:1.7}#notice a{color:var(--acc)}#notice button{padding:2px 10px;font-size:13px;margin-left:4px}
+#shuf{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:104px}#shuf.on{background:var(--acc);border-color:var(--acc);color:#fff}
 #help{width:34px;height:34px;padding:0;border-radius:50%;font-weight:bold}
 #zoom{position:fixed;inset:0;background:#0f172ae6;display:none;align-items:center;justify-content:center;z-index:40;cursor:zoom-out}#zoom.on{display:flex}#zoom img{max-width:95vw;max-height:92vh;background:#fff;border-radius:8px}
 #upd{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:none;gap:12px;align-items:center;font-size:14px;box-shadow:0 8px 30px #0005;z-index:45}
@@ -41,7 +42,7 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 <div id="notice" role="status" style="display:none"></div>
 <header><h1>ML &amp; Data Science Flashcards</h1><select id="deck"></select>
 <select id="mode"><option value="all">All cards</option><option value="due">Not yet known</option></select>
-<input id="q" placeholder="Search…" size="12"><button id="shuf">Shuffle</button><button id="help" title="How to use this (tour)">?</button><div id="acct" style="display:none"></div></header>
+<input id="q" placeholder="Search…" size="12"><button id="shuf"></button><button id="help" title="How to use this (tour)">?</button><div id="acct" style="display:none"></div></header>
 <div id="tour"><div id="spot"></div><div id="tip" role="dialog" aria-live="polite"></div></div>
 <div id="zoom"></div><div id="upd" role="status"><span>New cards are available.</span><button id="updBtn">Refresh</button></div>
 <div class="bar"><span id="pos"></span><span id="stats"></span></div>
@@ -60,12 +61,17 @@ let known={};try{known=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(known));}catch(e){}};
 const ALL=DECKS.flatMap(d=>d.cards.map(c=>({...c,deck:d.name,plain:(txt(c.q)+' '+txt(c.a)+' '+txt(c.x)).toLowerCase()})));
 let list=[],i=0,flipped=false;
+// Shuffle is the default. Each card keeps a random key, so the order stays put during searches and syncs,
+// and a new order comes with each page load or each time shuffle is turned back on.
+const ORDER='mlds.order';let shuffled=localStorage.getItem(ORDER)!='inOrder';
+const reshuffle=()=>ALL.forEach(c=>{c.r=Math.random();});reshuffle();
 $('deck').add(new Option('All decks ('+ALL.length+')','all'));
 DECKS.forEach(d=>$('deck').add(new Option(d.name+' ('+d.cards.length+')',d.name)));
 if([...$('deck').options].some(o=>o.value==localStorage.getItem(DECK)))$('deck').value=localStorage.getItem(DECK);
 const pool=()=>$('deck').value=='all'?ALL:ALL.filter(c=>c.deck==$('deck').value);
 function build(keep){const q=$('q').value.toLowerCase().trim();
  list=pool().filter(c=>(!q||c.plain.includes(q))&&($('mode').value=='all'||!known[c.id]));
+ if(shuffled)list.sort((a,b)=>a.r-b.r);
  if(!keep)i=0;i=Math.min(i,Math.max(0,list.length-1));render();}
 // Know more search: topic, then "machine learning" or "AI" when the card needs that context, then its description.
 // Capped at 30 words because Google ignores words past about 32; the description is what gets cut.
@@ -108,7 +114,13 @@ setFont(fontPct);$('size').onclick=$('more').onclick=e=>e.stopPropagation();cons
 $('zoom').onclick=()=>$('zoom').classList.remove('on');
 $('prev').onclick=()=>go(-1);$('next').onclick=()=>go(1);
 $('again').onclick=()=>mark(0);$('good').onclick=()=>mark(1);$('say').onclick=say;
-$('shuf').onclick=()=>{for(let a=list.length-1;a>0;a--){const b=Math.random()*(a+1)|0;[list[a],list[b]]=[list[b],list[a]];}i=0;render();};
+function showOrder(){const b=$('shuf');b.innerHTML=shuffled?'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg> Shuffle':'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg> In order';b.classList.toggle('on',shuffled);
+ b.title=shuffled?'Cards are shuffled. Click to show them in order.':'Cards are in order. Click to shuffle.';b.setAttribute('aria-pressed',shuffled);}
+// Switching keeps the current card on screen, and only changes which card comes next.
+$('shuf').onclick=()=>{const cur=list[i],wasFlipped=flipped;shuffled=!shuffled;if(shuffled)reshuffle();
+ try{localStorage.setItem(ORDER,shuffled?'shuffle':'inOrder');}catch(e){}
+ showOrder();build();i=Math.max(0,list.indexOf(cur));render();if(wasFlipped)flip();};
+showOrder();
 $('deck').onchange=()=>{localStorage.setItem(DECK,$('deck').value);prefsChanged();build();};$('mode').onchange=()=>build();$('q').oninput=()=>build();
 const STEPS=[
  {t:'Welcome 👋',p:`Flashcards for machine learning, deep learning, data mining, algorithms and Python: <b>${ALL.length}</b> cards in ${DECKS.length} decks. This quick tour shows how it works.`},
@@ -118,7 +130,7 @@ const STEPS=[
  {el:'rate',t:'4. Be honest with yourself',p:'Press <b>Know it</b> (<kbd>2</kbd>) if you got it right, or <b>Again</b> (<kbd>1</kbd>) if you didn’t. Use <b>← Prev</b> / <b>Next →</b> to browse without rating.'},
  {el:'stats',t:'5. Track your progress',p:'This counts the cards you know. Progress is saved in this browser'+(SYNC.url?', and on all your devices if you sign in with Google.':'.')},
  {el:'mode',t:'6. Focus on what’s left',p:'Switch to <b>Not yet known</b> to study only the cards you haven’t marked as known.'},
- {el:'tools',t:'7. Search and shuffle',p:'<b>Search</b> looks through questions, answers and explanations. <b>Shuffle</b> mixes up the order.'},
+ {el:'tools',t:'7. Search and choose the order',p:'<b>Search</b> looks through questions, answers and explanations. Cards start shuffled: click <b>Shuffle</b> to switch to <b>In order</b> and back. In order, Surya curated runs from basics to advanced.'},
  {el:'help',t:'You’re all set! 🎉',p:'The cards also work offline once loaded. Shortcuts: <kbd>Space</kbd> flip · <kbd>←</kbd><kbd>→</kbd> move · <kbd>1</kbd> Again · <kbd>2</kbd> Know it · <kbd>S</kbd> speak · <kbd>+</kbd><kbd>−</kbd> text size.<br>Click <b>?</b> any time to see this tour again.'}];
 let ts=-1;
 function tourRect(id){if(id=='rate'){const a=$('again').getBoundingClientRect(),b=$('good').getBoundingClientRect();return{left:a.left,top:Math.min(a.top,b.top),right:b.right,bottom:Math.max(a.bottom,b.bottom)};}
