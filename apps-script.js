@@ -24,6 +24,7 @@ const VISIT_GAP_MINUTES = 30;    // activity after a gap this long counts as a n
 // Visit counting needs no sign-in, so anyone could call it. These limits stop that filling the sheet.
 const MAX_VISITORS = 20000;
 const MAX_NEW_VISITORS_PER_HOUR = 500;
+const STATS_CACHE_SECONDS = 300; // the public totals are worked out at most this often
 
 // Run once from the Apps Script editor: creates the tabs and the session secret.
 function setup() {
@@ -58,6 +59,7 @@ function doPost(e) {
       case 'sync': return json(sync(body));
       case 'visit': return json(visit(body));
       case 'forgetVisitor': return json(forgetVisitor(body));
+      case 'stats': return json(stats());
       default: return json({ success: false, error: 'Unknown action' });
     }
   } catch (err) {
@@ -362,6 +364,26 @@ function forgetVisitor(body) {
     if (row) sheet.deleteRow(row);
     return { success: true };
   });
+}
+
+// The totals shown on the page: anyone can read these, so they must stay plain counts.
+// A signed-in person with several browsers counts once. A browser that never signed in counts as one user.
+function stats() {
+  const cache = CacheService.getScriptCache();
+  const saved = cache.get('stats');
+  if (saved) return JSON.parse(saved);
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(VISITORS_SHEET);
+  const rows = sheet && sheet.getLastRow() > 1 ? sheet.getRange(2, 1, sheet.getLastRow() - 1, 6).getValues() : [];
+  const accounts = new Set();
+  let views = 0, unlinked = 0;
+  rows.forEach(r => {
+    if (!r[0]) return;
+    views += Number(r[3]) || 0;
+    if (r[5]) accounts.add(r[5]); else unlinked++;
+  });
+  const result = { success: true, views: views, users: accounts.size + unlinked };
+  cache.put('stats', JSON.stringify(result), STATS_CACHE_SECONDS);
+  return result;
 }
 
 // ---- Preferences ----

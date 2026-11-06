@@ -24,7 +24,8 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 .chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}.chip{font-size:12px;background:#ccfbf1;color:var(--acc);padding:2px 9px;border-radius:99px}
 .controls{display:flex;gap:10px;margin:6px 0 16px;flex-wrap:wrap;justify-content:center}.controls button{padding:10px 18px;font-size:15px}
 .again{border-color:#dc2626!important;color:#dc2626}.good{border-color:#16a34a!important;color:#16a34a}
-.hint{font-size:12px;color:var(--mut);margin-bottom:20px;text-align:center;padding:0 12px}.hint a{color:var(--mut)}
+.hint{font-size:12px;color:var(--mut);margin-bottom:20px;text-align:center;padding:0 12px;max-width:820px}
+#counts{font-size:12px;color:var(--mut);align-self:flex-start;padding:0 12px 12px}@media(min-width:1200px){#counts{position:fixed;left:14px;bottom:10px;padding:0}}.hint a{color:var(--mut)}
 #acct{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;min-height:34px}#syncState{color:var(--mut);font-size:12px}
 #notice{width:100%;background:#ccfbf1;color:var(--ink);padding:8px 16px;font-size:13px;text-align:center;line-height:1.7}#notice a{color:var(--acc)}#notice button{padding:2px 10px;font-size:13px;margin-left:4px}
 #shuf{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:104px}#shuf.on{background:var(--acc);border-color:var(--acc);color:#fff}
@@ -50,6 +51,7 @@ h1{font-size:21px;margin:0 auto 0 0}select,button,input{font:inherit;font-size:1
 <div class="controls"><button id="prev">← Prev</button><button id="say">🔊 Speak</button><button class="again" id="again">Again</button><button class="good" id="good">Know it</button><button id="next">Next →</button></div>
 <div class="hint">Space/click = flip · ←/→ = navigate · 1 = again · 2 = know it · S = speak · +/− = text size<br>
 Anki decks from <a href="https://github.com/ppant/anki" target="_blank" rel="noopener">ppant/anki</a> · <span id="net"></span><span id="privacy"></span><span id="visitCtl"></span></div>
+<div id="counts" title="A view is a visit: activity within 30 minutes counts once. Updated every few minutes."></div>
 <script>
 const DECKS=/*DATA*/null;const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -254,6 +256,10 @@ function showVisitControl(){const v=$('visitCtl');
  if(browserOptOut()){v.textContent=' · Visit counting is off (your browser’s privacy setting)';return;}
  const on=!trackingOff();v.innerHTML=' · Visit counting is '+(on?'on':'off')+': <a href="#" id="visitToggle">turn '+(on?'off':'on')+'</a>';
  $('visitToggle').onclick=e=>{e.preventDefault();setTracking(!on);};}
+// Site-wide totals. These don't use the visitor ID, so people who turned counting off see them too.
+function showCounts(){if(!navigator.onLine||$('counts').textContent)return;
+ const n=(v,w)=>v.toLocaleString()+' '+w+(v==1?'':'s');
+ callBackend({action:'stats'}).then(r=>{if(r.views>0)$('counts').textContent=n(r.views,'view')+' · '+n(r.users,'unique user');}).catch(()=>{});}
 function startVisits(){showVisitControl();
  if(trackingOff()){dropVisitorId();}
  else{sendVisit();
@@ -269,7 +275,7 @@ function startVisits(){showVisitControl();
 if(SYNC.clientId&&SYNC.url){$('acct').style.display='';$('privacy').innerHTML='Signing in saves your name, email and progress in a private Google Sheet kept by the site owner. <a href="privacy.html">Privacy</a>';
  showAccount();
  if(session())syncNow({pull:true,firstLoad:true});
- startVisits();
+ startVisits();showCounts();addEventListener('online',showCounts);
  addEventListener('online',()=>{if(!session())loadGoogleButton();else syncNow({pull:true});});
  document.addEventListener('visibilitychange',()=>{if(!session())return;
   if(document.visibilityState=='hidden')syncNow({keepalive:true});
